@@ -1,5 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import Material from '@primevue/themes/material';
+import Aura from '@primevue/themes/aura';
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   primevue: {
     options: {
       theme: {
-        preset: Material
+        preset: Aura
       }
     }
   }
