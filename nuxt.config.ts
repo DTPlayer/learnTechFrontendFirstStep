@@ -1,16 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import Aura from '@primevue/themes/aura';
-
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@primevue/nuxt-module'],
-  css: ['./assets/css/main.css'],
-  primevue: {
-    options: {
-      theme: {
-        preset: Aura
-      }
-    }
-  }
-})
+  app: {
+    pageTransition: { name: "fade", mode: "out-in" },
+    head: {
+      titleTemplate: "Kanban",
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1.0" },
+        {
+          hid: "description",
+          name: "description",
+          content:
+            "Your new favorite task manager is right here! A intuitive, clean and modern Kanban like task manager.",
+        },
+        {
+          name: "keywords",
+          content: "Kanban, task, manager",
+        },
+      ],
+    },
+  },
+
+  typescript: {
+    shim: false,
+  },
+
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vueuse/nuxt"],
+  compatibilityDate: "2024-10-29",
+});

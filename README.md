@@ -1,77 +1,54 @@
-# Nuxt Minimal Starter
+# Kanban
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Tags
 
-## Setup
+![Development](https://img.shields.io/badge/Status-Development-green)
+![Languages](https://img.shields.io/github/languages/count/leonardonicola/kanban?color=blueviolet)
+![License](https://img.shields.io/github/license/leonardonicola/kanban?color=blueviolet")
 
-Minimal NodeJS version is 20.
+## Features
 
-Make sure to install dependencies:
+- [x] Drag and Drop
+  - [x] Drag and drop tasks between columns (status)
+- [x] CRUD
+  - [x] Create and edit tasks
+  - [x] Create, edit, remove columns (status)
+  - [x] Create, edit, remove boards [x
+- [x] Mobile responsive
+- [x] localStorage
+
+## Technologies
+
+- [Nuxt](https://nuxt.com/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Pinia](https://pinia.vuejs.org/)
+- [uuid](https://github.com/uuidjs/uuid)
+- [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
+
+## Installation
+
+Install the project on your machine
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
+## yarn
 yarn install
 
-# bun
-bun install
+# npm
+npm install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+Start the project in the development environment
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
 # yarn
-yarn dev
+$ yarn dev
 
-# bun
-bun run dev
+# npm
+$ npm run dev
 ```
 
-## Production
+## Authors
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [@anteroselin](https://www.github.com/anteroselin)
+- [@arthurlee](https://www.github.com/arthur9371)
