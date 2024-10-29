@@ -10,20 +10,20 @@
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
-        <h2>Create a New Board</h2>
+        <h2>Создать Новую Доску</h2>
         <div class="flex flex-col space-y-2 justify-between h-full md:w-96">
           <div class="flex flex-col gap-5">
-            <label for="task_name">Board Name</label>
+            <label for="task_name">Название Доски</label>
             <input
               autofocus
               v-model.trim="boardName"
               type="text"
               name="task_name"
-              placeholder="e.g Learn Nuxt.js"
+              placeholder="Введите Название"
             />
           </div>
         </div>
-        <BaseButton label="Create Board" @action="useCreateNewBoard" class="bg-savoy"/>
+        <BaseButton label="Создать Доску" @action="useCreateNewBoard" class="bg-savoy"/>
       </div>
     </div>
   </transition>

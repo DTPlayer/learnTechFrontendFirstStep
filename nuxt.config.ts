@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "fade", mode: "out-in" },
     head: {
-      titleTemplate: "Kanban",
+      titleTemplate: "JobJuorney",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0" },
@@ -11,11 +11,11 @@ export default defineNuxtConfig({
           hid: "description",
           name: "description",
           content:
-            "Your new favorite task manager is right here! A intuitive, clean and modern Kanban like task manager.",
+            "Ваш новый любимый менеджер задач уже здесь! Интуитивно понятный, чистый и современный менеджер задач, похожий на канбан.",
         },
         {
           name: "keywords",
-          content: "Kanban, task, manager",
+          content: "Канбан, карточки, менеджер задач",
         },
       ],
     },

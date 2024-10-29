@@ -3,11 +3,15 @@ export default <Partial<Config>>{
   theme: {
     extend: {
       colors: {
-        mauve: "#20212C",
-        charcoal: "#2B2C37",
-        marengo: "#d6d6d6",
-        savoy: "#2D89EF",
+        mauve: "#020420", //темный
+        charcoal: "#34495E", //серый
+        marengo: "#d6d6d6", // белый 
+        savoy: "#00DC82", //светло-зеленый
+				darkGreen: "#41B883", //светло-зеленый
       },
+			height: {
+        '110': '110%',
+      }
     },
   },
 };

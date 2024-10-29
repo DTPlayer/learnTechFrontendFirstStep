@@ -1,13 +1,13 @@
 <template>
   <section class="w-full h-full p-10 overflow-y-auto">
-    <h1 class="mb-24">Your boards:</h1>
+    <h1 class="mb-24">Ваши Доски:</h1>
     <div
       class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-auto gap-10"
       v-if="boards!.length > 0"
     >
       <div
         v-for="board in boards"
-        class="rounded-2xl bg-savoy p-5 cursor-pointer w-full h-full hover:bg-blue-400 transition-colors"
+        class="rounded-2xl bg-savoy p-5 cursor-pointer w-full h-full hover:bg-darkGreen transition-colors"
         @click="() => $router.push(`/${board.id}`)"
       >
         <ViewColumnsIcon class="w-10 h-10 mb-5" />
@@ -20,7 +20,7 @@
       v-else
     >
       <ViewColumnsIcon class="w-10 h-10 mb-5" />
-      <h2>+ CREATE A BOARD</h2>
+      <h2>+ Создать Доску</h2>
     </div>
   </section>
 </template>

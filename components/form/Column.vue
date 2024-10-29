@@ -1,4 +1,5 @@
-<template>
+<!-- я пока только закоментил, не знаю как удалить компонент граммотно  -->
+<!-- <template>
   <div
     :class="isCreatingColumn ? '' : 'cursor-pointer hover:text-indigo-600'"
     class="w-80 h-full flex flex-col items-center justify-center rounded-xl bg-gradient-to-b from-charcoal text-2xl font-bold text-marengo transition-colors"
@@ -30,7 +31,7 @@
       </div>
     </transition>
   </div>
-</template>
+</template> -->
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
 import { XMarkIcon } from "@heroicons/vue/24/outline";

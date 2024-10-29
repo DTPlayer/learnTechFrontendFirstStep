@@ -6,18 +6,18 @@
       <div class="w-full p-5">
         <NuxtLink to="/" exact-active-class="text-savoy ">
           <div class="flex flex-row gap-2">
-            <ChartBarSquareIcon class="w-10 h-10" />
-            <h1 class="mb-20">Kanban</h1>
+						<MyCustomIcon/>
+            <h1 class="mb-20">JobJuorney</h1>
           </div>
         </NuxtLink>
-        <p class="mb-5 tracking-widest">ALL BOARDS ({{ boardsCount }})</p>
+        <p class="mb-5 tracking-widest">ВСЕ ДОСКИ ({{ boardsCount }})</p>
       </div>
       <div v-if="boards!.length > 0">
         <NuxtLink
           v-for="board in boards"
           :key="board.id"
           :to="`/${board.id}`"
-          class="flex gap-2 px-5 py-3 mr-5 items-center hover:bg-blue-400 transition-colors rounded-r-3xl font-bold"
+          class="flex gap-2 px-5 py-3 mr-5 items-center hover:bg-darkGreen transition-colors rounded-r-3xl font-bold"
           exact-active-class="bg-savoy"
         >
           <ViewColumnsIcon class="w-5 h-5" />
@@ -28,7 +28,7 @@
         class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl"
         @click="boardFormState = true"
       >
-        <ViewColumnsIcon class="w-5 h-5" />+ Create New Board
+        <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
       </div>
     </aside>
     <slot></slot>
@@ -37,8 +37,9 @@
 </template>
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
-import { ChartBarSquareIcon, ViewColumnsIcon } from "@heroicons/vue/24/outline";
+import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
+import MyCustomIcon from '~/components/MyCustomIcon.vue';
 
 const boardFormState = isAddBoardFormOpen();
 

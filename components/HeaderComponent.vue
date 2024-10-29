@@ -13,7 +13,7 @@
         @click="toggleFormModal(true)"
         class="hidden md:flex gap-2 items-center bg-savoy rounded-3xl px-5 py-3 font-semibold hover:scale-105 transition"
       >
-        + ADD TASK
+        + Добавить Карточку
       </button>
       <EllipsisVerticalIcon
         class="w-10 h-10 cursor-pointer"
@@ -31,12 +31,12 @@
         v-if="isMobileMenuOpen"
         class="center-fixed w-full h-full bg-neutral-800 flex flex-col gap-10 items-center justify-center font-bold z-20"
       >
-        <NuxtLink to="/" class="border-b p-2">HOME</NuxtLink>
+        <NuxtLink to="/" class="border-b p-2">Главная</NuxtLink>
         <p class="border-b p-2" @click="openAddBoardModal">
-          + CREATE NEW BOARD
+          + Сохдать Новую Доску
         </p>
-        <p class="border-b p-2" @click="toggleFormModal(true)">+ ADD TASK</p>
-        <p class="border-b p-2" @click="openEditBoardModal">EDIT BOARD</p>
+        <p class="border-b p-2" @click="toggleFormModal(true)">+ Добавить Карточку</p>
+        <p class="border-b p-2" @click="openEditBoardModal">Изменить Доску</p>
         <XMarkIcon
           class="w-10 h-10 absolute top-8 right-5 z-10"
           @click="() => (isMobileMenuOpen = false)"
