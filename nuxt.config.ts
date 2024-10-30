@@ -25,6 +25,6 @@ export default defineNuxtConfig({
     shim: false,
   },
 
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@vueuse/nuxt"],
+  modules: ["@pinia/nuxt", "@vueuse/nuxt", "@nuxt/ui"],
   compatibilityDate: "2024-10-29",
 });

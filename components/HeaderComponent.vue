@@ -2,6 +2,13 @@
   <header
     class="flex items-center justify-between px-5 h-24 w-full bg-charcoal"
   >
+    <UPopover :popper="{ placement: 'bottom-start' }">
+      <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(date, 'd MMM, yyy')" />
+
+      <template #panel="{ close }">
+        <DatePicker v-model="date" is-required @close="close" />
+      </template>
+    </UPopover>
     <select class="block md:hidden" v-model="boardIdInView">
       <option v-for="board in boards" :value="board.id">
         {{ board.name }}
@@ -53,6 +60,10 @@ import {
   EllipsisVerticalIcon,
 } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
+import { format } from 'date-fns'
+
+const date = ref(new Date())
+const close = ref(true)
 
 //Route
 const route = useRoute();
