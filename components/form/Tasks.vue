@@ -38,6 +38,7 @@
 						<label for="task_SalaryCandidate">Дата создания резюме</label>
 						<UPopover :popper="{ placement: 'bottom-start' }">
 							<UButton icon="i-heroicons-calendar-days-20-solid" :label="format(date, 'd MMM, yyy')" />
+
 							<template #panel="{ close }">
 								<DatePicker v-model="date" is-required @close="close" />
 							</template>
@@ -61,7 +62,6 @@
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-
 
 import { format } from 'date-fns'
 
