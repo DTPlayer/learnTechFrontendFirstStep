@@ -17,9 +17,48 @@
 import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 import { useKanbanStore } from "~~/stores";
+import { axiosInstance } from "~/components/axiosInstance";
+
+let boards = ref([]);
+
+if (import.meta.client) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    axiosInstance({
+      method: "post",
+      url: "/api/auth",
+      data: {
+        login: 'test',
+        password: 'password',
+      }
+    }).then((response) => {
+      if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
+      } else {
+        console.log(response.data);
+      }
+    }).catch((error) => {
+      console.log(error);
+      localStorage.removeItem("token");
+    })
+  }
+
+  // TODO: Add loading
+  axiosInstance({
+    method: "get",
+    url: "/api/board/get/all",
+  }).then((response) => {
+    if (response.data.success) {
+      boards.value = response.data.boards;
+    } else {
+      console.log(response.data);
+    }
+  }).catch((error) => {
+    console.log(error);
+  })
+}
 
 const store = useKanbanStore();
-const { boards } = storeToRefs(store);
 
 const addBoardState = isAddBoardFormOpen();
 
