@@ -20,6 +20,7 @@
     "@heroicons/vue": "^2.0.16",
     "@pinia/nuxt": "^0.4.7",
     "@vueuse/nuxt": "^9.13.0",
+    "axios": "^1.7.7",
     "date-fns": "^2.30.0",
     "pinia": "^2.0.32",
     "uuid": "^9.0.0",
