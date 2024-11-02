@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Создаем экземпляр Axios
 export const axiosInstance = axios.create({
   baseURL: 'https://ltapi.mcnextcloud.ru',
 });

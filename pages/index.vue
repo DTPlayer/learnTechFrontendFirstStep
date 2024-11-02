@@ -19,7 +19,12 @@ import { storeToRefs } from "pinia";
 import { useKanbanStore } from "~~/stores";
 import { axiosInstance } from "~/components/axiosInstance";
 
-let boards = ref([]);
+interface Board {
+  id: string;
+  name: string;
+}
+
+let boards: Ref<Board[]> = ref([]);
 
 if (import.meta.client) {
   const token = localStorage.getItem('token');
