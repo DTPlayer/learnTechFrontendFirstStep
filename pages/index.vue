@@ -27,40 +27,34 @@ interface Board {
 let boards: Ref<Board[]> = ref([]);
 
 if (import.meta.client) {
-  const token = localStorage.getItem('token');
-  if (!token) {
+  const token = localStorage.getItem("token");
+  if (token) {
+    axiosInstance({
+      method: "get",
+      url: "/api/board/get/all",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      boards.value = response.data.boards;
+    }).catch((error) => {
+      console.log(error);
+    })
+  } else {
     axiosInstance({
       method: "post",
       url: "/api/auth",
       data: {
         login: 'test',
-        password: 'password',
+        password: 'password'
       }
-    }).then((response) => {
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token);
-      } else {
-        console.log(response.data);
-      }
+    }).then((responce) => {
+      localStorage.setItem("token", responce.data.token);
+      location.reload();
     }).catch((error) => {
       console.log(error);
-      localStorage.removeItem("token");
     })
   }
-
-  // TODO: Add loading
-  axiosInstance({
-    method: "get",
-    url: "/api/board/get/all",
-  }).then((response) => {
-    if (response.data.success) {
-      boards.value = response.data.boards;
-    } else {
-      console.log(response.data);
-    }
-  }).catch((error) => {
-    console.log(error);
-  })
 }
 
 const store = useKanbanStore();
