@@ -19,7 +19,7 @@
 			<div v-if="isMobileMenuOpen" class="center-fixed w-full h-full bg-neutral-800 flex flex-col gap-10 items-center justify-center font-bold z-20">
 				<NuxtLink to="/" class="border-b p-2">Главная</NuxtLink>
 				<p class="border-b p-2" @click="openAddBoardModal">
-					+ Сохдать Новую Доску
+					+ Создать Новую Доску
 				</p>
 				<p class="border-b p-2" @click="toggleFormModal(true)">+ Добавить Карточку</p>
 				<p class="border-b p-2" @click="openEditBoardModal">Изменить Доску</p>
@@ -36,7 +36,6 @@ import {
 	EllipsisVerticalIcon,
 } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
-import { format } from 'date-fns'
 
 const date = ref(new Date())
 const close = ref(true)

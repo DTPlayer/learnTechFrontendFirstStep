@@ -39,6 +39,8 @@ if (import.meta.client) {
       boards.value = response.data.boards;
     }).catch((error) => {
       console.log(error);
+      localStorage.removeItem("token");
+      location.reload();
     })
   } else {
     axiosInstance({

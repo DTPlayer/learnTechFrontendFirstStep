@@ -40,6 +40,7 @@ import { useKanbanStore } from "~~/stores";
 import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 import MyCustomIcon from '~/components/MyCustomIcon.vue';
+import { axiosInstance } from "~/components/axiosInstance";
 
 const boardFormState = isAddBoardFormOpen();
 
@@ -50,4 +51,36 @@ const { boards } = storeToRefs(store);
 const boardsCount = computed(() => {
   return boards.value?.length;
 });
+if (import.meta.client) {
+  const token = localStorage.getItem("token");
+  if (token) {
+    axiosInstance({
+      method: "get",
+      url: "/api/board/get/all",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => {
+      boards.value = response.data.boards;
+    }).catch((error) => {
+      console.log(error);
+      localStorage.removeItem("token");
+      location.reload();
+    })
+  } else {
+    axiosInstance({
+      method: "post",
+      url: "/api/auth",
+      data: {
+        login: 'test',
+        password: 'password'
+      }
+    }).then((responce) => {
+      localStorage.setItem("token", responce.data.token);
+      location.reload();
+    }).catch((error) => {
+      console.log(error);
+    })
+  }
+}
 </script>

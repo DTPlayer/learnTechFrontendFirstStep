@@ -31,6 +31,8 @@
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
+import { axiosInstance } from "~/components/axiosInstance";
+import { storeToRefs } from "pinia";
 
 //Props and emits
 const boardFormState = isAddBoardFormOpen();
@@ -41,17 +43,37 @@ const boardName = ref<string>("");
 //Store
 const store = useKanbanStore();
 const { createNewBoard } = store;
-
+const { boards } = storeToRefs(store);
 //Methods
 const resetValues = (): void => {
   boardName.value = "";
 };
 
 const useCreateNewBoard = () => {
-  if (useValidator(boardName.value)) {
-    createNewBoard(boardName.value);
-    resetValues();
-    boardFormState.value = false;
+  if (import.meta.client) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axiosInstance({
+        method: "post",
+        url: "/api/board/create",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          name: boardName.value,
+        },
+      }).then((response) => {
+        store.boards = response.data.boards;
+        // boardFormState.value = false;
+        // resetValues();
+        // !!!!!!!! Из-за какой-то проблемы не закрывается окно, поэтому reload
+        location.reload();
+      }).catch((error) => {
+        console.log(error);
+        localStorage.removeItem("token");
+        location.reload();
+      });
+    }
   }
 };
 </script>

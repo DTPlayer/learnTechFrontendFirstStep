@@ -22,28 +22,6 @@
               placeholder="Введите Название Доски"
             />
           </div>
-          <p class="pt-5" v-if="getBoardColumns(boardId)!.length > 0">
-            Колонки
-          </p>
-          <div class="flex flex-col gap-5 overflow-y-auto h-fit">
-            <div
-              v-for="column in boardColumns"
-              class="w-full flex gap-2 justify-between"
-            >
-              <input
-                autofocus
-                v-model="column.name"
-                type="text"
-                name="task_name"
-                placeholder="Введите Название Колонки"
-                class="w-full"
-              />
-              <TrashIcon
-                class="w-10 h-10 cursor-pointer text-marengo"
-                @click="removeColumnFromBoard(column.id)"
-              />
-            </div>
-          </div>
         </div>
         <div class="flex flex-col gap-3 mt-16">
           <ButtonBase

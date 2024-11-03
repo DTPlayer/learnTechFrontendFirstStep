@@ -6,47 +6,40 @@ export const useKanbanStore = defineStore("kanban", {
   state: () => ({
     boards: useStorage("board", [
       {
-        id: "499ff073-7759-45c4-a62b-020860056830",
-        name: "Доска 1",
-        columns: [
-          {
-            id: "52a3c12c-a755-46e1-9a95-22ab10d61a1d",
-            name: "Стакан резюме",
-            tasks: [
-							// ! Убрал карточку
-              // {
-              //   id: "52a96e6f-1213-46f6-8ae3-6a8fb00b126e",
-              //   name: "Title example",
-              //   description: "Description example",
-              // },
-            ],
-          },
-          {
-            id: "c46c6c66-9da0-42f2-97fd-1c212e4e8de2",
-            name: "Теплый контакт",
-            tasks: [],
-          },
-          {
-            id: "3e6f2fa2-1c93-4409-85b7-4660c36a1242",
-            name: "Скрининг",
-            tasks: [],
-          },
-          {
-            id: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
-            name: "Интервью с заказчиком",
-            tasks: [],
-          },
-          {
-            id: "7q8r9s0t-1u2v-3w4x-5y6z-7a8b9c0d1e2f",
-            name: "Проверка СБ",
-            tasks: [],
-          },
-          {
-            id: "3g4h5i6j-7k8l-9m0n-1o2p-3q4r5s6t7u8v",
-            name: "Оффер",
-            tasks: [],
-          },
-        ],
+        // id: "499ff073-7759-45c4-a62b-020860056830",
+        // name: "Доска 1",
+        // columns: [
+        //   {
+        //     id: "52a3c12c-a755-46e1-9a95-22ab10d61a1d",
+        //     name: "Стакан резюме",
+        //     tasks: [],
+        //   },
+        //   {
+        //     id: "c46c6c66-9da0-42f2-97fd-1c212e4e8de2",
+        //     name: "Теплый контакт",
+        //     tasks: [],
+        //   },
+        //   {
+        //     id: "3e6f2fa2-1c93-4409-85b7-4660c36a1242",
+        //     name: "Скрининг",
+        //     tasks: [],
+        //   },
+        //   {
+        //     id: "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+        //     name: "Интервью с заказчиком",
+        //     tasks: [],
+        //   },
+        //   {
+        //     id: "7q8r9s0t-1u2v-3w4x-5y6z-7a8b9c0d1e2f",
+        //     name: "Проверка СБ",
+        //     tasks: [],
+        //   },
+        //   {
+        //     id: "3g4h5i6j-7k8l-9m0n-1o2p-3q4r5s6t7u8v",
+        //     name: "Оффер",
+        //     tasks: [],
+        //   },
+        // ],
       },
     ] as Board[] | undefined),
   }),
