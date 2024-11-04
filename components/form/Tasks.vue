@@ -37,7 +37,7 @@
           <div class="flex flex-col space-y-2">
             <label for="task_taskFileCandidate">Загрузить файл</label>
             <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidate" type="file">
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, excel, pdf.</p>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, doc, excel, pdf.</p>
           </div>
 
           <div class="flex flex-col space-y-2">
