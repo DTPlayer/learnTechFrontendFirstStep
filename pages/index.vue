@@ -38,6 +38,11 @@
 
     
   </div>
+
+  <div v-if="errorView" class="p-6 w-100 h-22 shadow-2xl rounded-lg transition ease duration-300 bg-charcoal absolute right-10 bottom-10">
+  <h2 class="text-xl/9 font-bold tracking-tight text-marengo">Неправильный пароль или логин</h2>
+</div>
+
 </div>
 
 	<section v-else class="w-full h-full p-10 overflow-y-auto">
@@ -68,6 +73,7 @@ interface Board {
 
 const boards: Ref<Board[]> = ref([]);
 const loginView = ref(true);
+const errorView = ref(false);
 
 if (import.meta.client) {
   if (localStorage.getItem("token")) {
@@ -89,6 +95,8 @@ const authUser = (e) => {
     loginView.value = false;
   }).catch((error) => {
     console.log(error)
+    errorView.value = true;
+    setTimeout(() => errorView.value = false, 4000);
   })
 }
 
