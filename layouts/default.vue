@@ -67,20 +67,6 @@ if (import.meta.client) {
       localStorage.removeItem("token");
       location.reload();
     })
-  } else {
-    axiosInstance({
-      method: "post",
-      url: "/api/auth",
-      data: {
-        login: 'test',
-        password: 'password'
-      }
-    }).then((responce) => {
-      localStorage.setItem("token", responce.data.token);
-      location.reload();
-    }).catch((error) => {
-      console.log(error);
-    })
   }
 }
 </script>

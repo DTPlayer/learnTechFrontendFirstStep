@@ -1,6 +1,6 @@
 <template>
 
-<div class="flex min-h-full min-w-full flex-col justify-center px-6 py-12 lg:px-8 absolute bg-gradient-to-r from-charcoal to-mauve">
+<div v-if="loginView" class="flex min-h-full min-w-full flex-col justify-center px-6 py-12 lg:px-8 absolute bg-gradient-to-r from-charcoal to-mauve">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img class="mx-auto h-10 w-auto" src="../public/Logo.svg" alt="JobJuorney">
     <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-marengo">Авторизация</h2>
@@ -40,7 +40,7 @@
   </div>
 </div>
 
-	<section class="w-full h-full p-10 overflow-y-auto">
+	<section v-else class="w-full h-full p-10 overflow-y-auto">
 		<h1 class="mb-24">Ваши Доски:</h1>
 		<div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-auto gap-10" v-if="boards!.length > 0">
 			<div v-for="board in boards" class="rounded-2xl bg-savoy p-5 cursor-pointer w-full h-full hover:bg-darkGreen transition-colors" @click="() => $router.push(`/${board.id}`)">
@@ -66,7 +66,14 @@ interface Board {
   name: string;
 }
 
-let boards: Ref<Board[]> = ref([]);
+const boards: Ref<Board[]> = ref([]);
+const loginView = ref(true);
+
+if (import.meta.client) {
+  if (localStorage.getItem("token")) {
+    loginView.value = false;
+  }
+}
 
 const authUser = (e) => {
   e.preventDefault();
@@ -79,7 +86,7 @@ const authUser = (e) => {
     },
   }).then((response) => {
     localStorage.setItem("token", response.data.token);
-    console.log('auth complete!')
+    loginView.value = false;
   }).catch((error) => {
     console.log(error)
   })
