@@ -6,7 +6,7 @@
       >
         <button
           class="absolute right-0 translate-x-4 -translate-y-5 top-0 rounded-full bg-mauve p-3"
-          @click="() => (boardFormState = false)"
+          @click="() => $emit('update:boardFormState', false)"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -31,49 +31,26 @@
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { axiosInstance } from "~/components/axiosInstance";
-import { storeToRefs } from "pinia";
+import { ref } from "vue";
 
 //Props and emits
-const boardFormState = isAddBoardFormOpen();
+const props = defineProps<{
+  boardFormState: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:boardFormState', value: boolean): void;
+}>();
 
 //Refs
 const boardName = ref<string>("");
 
 //Store
 const store = useKanbanStore();
-const { createNewBoard } = store;
-const { boards } = storeToRefs(store);
-//Methods
-const resetValues = (): void => {
-  boardName.value = "";
-};
 
 const useCreateNewBoard = () => {
-  if (import.meta.client) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axiosInstance({
-        method: "post",
-        url: "/api/board/create",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: {
-          name: boardName.value,
-        },
-      }).then((response) => {
-        store.boards = response.data.boards;
-        // boardFormState.value = false;
-        // resetValues();
-        // !!!!!!!! Из-за какой-то проблемы не закрывается окно, поэтому reload
-        location.reload();
-      }).catch((error) => {
-        console.log(error);
-        localStorage.removeItem("token");
-        location.reload();
-      });
-    }
-  }
+  store.createNewBoard(boardName.value);
+  emit('update:boardFormState', false);
+  location.reload();
 };
 </script>

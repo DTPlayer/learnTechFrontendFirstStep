@@ -6,7 +6,7 @@
       <div class="w-full p-5">
         <NuxtLink to="/" exact-active-class="text-savoy ">
           <div class="flex flex-row gap-2">
-						<MyCustomIcon/>
+            <MyCustomIcon/>
             <h1 class="mb-20">JobJuorney</h1>
           </div>
         </NuxtLink>
@@ -26,13 +26,13 @@
       </div>
       <div
         class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl"
-        @click="boardFormState = true"
+        @click="() => (boardFormState = true)"
       >
         <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
       </div>
     </aside>
     <slot></slot>
-    <FormAddBoard />
+    <AddBoard :boardFormState="boardFormState" @update:boardFormState="updateBoardFormState" />
   </main>
 </template>
 <script setup lang="ts">
@@ -40,47 +40,26 @@ import { useKanbanStore } from "~~/stores";
 import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 import MyCustomIcon from '~/components/MyCustomIcon.vue';
-import { axiosInstance } from "~/components/axiosInstance";
+import AddBoard from '~/components/form/AddBoard.vue';
+import { ref, computed, onMounted } from "vue";
 
-const boardFormState = isAddBoardFormOpen();
+const boardFormState = ref(false);
 
 const store = useKanbanStore();
 
 const { boards } = storeToRefs(store);
+const { initializeBoards } = store;
 
 const boardsCount = computed(() => {
   return boards.value?.length;
 });
-if (import.meta.client) {
-  const token = localStorage.getItem("token");
-  if (token) {
-    axiosInstance({
-      method: "get",
-      url: "/api/board/get/all",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((response) => {
-      boards.value = response.data.boards;
-    }).catch((error) => {
-      console.log(error);
-      localStorage.removeItem("token");
-      location.reload();
-    })
-  } else {
-    axiosInstance({
-      method: "post",
-      url: "/api/auth",
-      data: {
-        login: 'test',
-        password: 'password'
-      }
-    }).then((responce) => {
-      localStorage.setItem("token", responce.data.token);
-      location.reload();
-    }).catch((error) => {
-      console.log(error);
-    })
-  }
-}
+
+// Вызываем initializeBoards при монтировании компонента
+onMounted(() => {
+  initializeBoards();
+});
+
+const updateBoardFormState = (newState: boolean) => {
+  boardFormState.value = newState;
+};
 </script>

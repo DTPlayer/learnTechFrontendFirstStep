@@ -23,7 +23,7 @@
             />
           </div>
         </div>
-        <div class="flex flex-col gap-3 mt-16">
+        <div class="flex flex-col gap-3 mt-8">
           <ButtonBase
             label="Сохранить Изменения"
             @action="saveChanges"
@@ -39,20 +39,22 @@
     </div>
   </transition>
 </template>
+
 <script setup lang="ts">
 import { useKanbanStore } from "~~/stores";
-import { XMarkIcon, TrashIcon } from "@heroicons/vue/24/outline";
+import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
+import ButtonBase from '~/components/base/Button.vue';
 
-//Props and emits
+// Props and emits
 const boardFormState = isEditBoardFormOpen();
 
-//Store
+// Store
 const store = useKanbanStore();
 const { boards } = storeToRefs(store);
-const { editBoard, getBoardColumns, deleteBoard } = store;
+const { editBoard, getBoardColumns, deleteBoardOnServer } = store;
 
-//Refs
+// Refs
 const route = useRoute();
 const router = useRouter();
 const boardId = route.params.board.toString();
@@ -66,9 +68,14 @@ const validateColumnsName = (): boolean => {
 };
 
 const saveChanges = () => {
-  if (useValidator(boardName.value!) && validateColumnsName()) {
-    editBoard(boardId, boardName.value!, boardColumns.value!);
-    boardFormState.value = false;
+  if (useValidator(boardName.value) && validateColumnsName()) {
+    editBoard(boardId, boardName.value) // Передаем boardId и новое название доски
+      .then(() => {
+        boardFormState.value = false; // Закрываем модальное окно после успешного изменения
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };
 
@@ -80,9 +87,14 @@ const removeColumnFromBoard = (columnId: string) => {
 };
 
 const removeBoard = () => {
-  boardFormState.value = false;
-  router.push("/");
-  deleteBoard(boardId);
+  deleteBoardOnServer(boardId) // Передаем boardId в метод deleteBoardOnServer
+    .then(() => {
+      boardFormState.value = false; // Закрываем модальное окно после успешного удаления
+      router.push("/"); // Перенаправляем на главную страницу
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 watch(boardFormState, () => {
