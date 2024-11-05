@@ -8,7 +8,7 @@
 
         <h2>{{ !!taskToEditState ? "Изменить" : "Добавить" }} Карточку</h2>
 
-        <div class="w-full h-full space-y-2 pr-8 flex flex-col">
+        <div class="w-full h-full space-y-2 flex flex-col">
           <div class="flex flex-col space-y-2">
             <label for="task_FIOCandidate">ФИО кандидата</label>
             <input v-model.trim="taskFIOCandidate" type="text" name="task_FIOCandidate" placeholder="Введите ФИО кандидата" />
@@ -21,7 +21,7 @@
 
           <div class="flex flex-col space-y-2">
             <label for="task_FIOHR">ФИО ответственного HR</label>
-            <input v-model.trim="taskFIOHR" type="text" name="task_FIOHR" placeholder="Введите ФИО ответственного HR" />
+            <input disabled v-model.trim="taskFIOHR" type="text" name="task_FIOHR" placeholder="Введите ФИО ответственного HR" />
           </div>
 
           <div class="flex flex-col space-y-2">
@@ -40,24 +40,24 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, doc, excel, pdf.</p>
           </div>
 
-          <div class="flex flex-col space-y-2">
-            <label for="task_SalaryCandidate">Дата создания резюме</label>
-            <UPopover :popper="{ placement: 'bottom-start' }">
-              <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(date, 'd MMM, yyy')" />
-
-              <template #panel="{ close }">
-                <DatePicker v-model="date" is-required @close="close" />
-              </template>
-            </UPopover>
-          </div>
-
-          <div class="space-y-2">
-            <p>Текущий Статус</p>
-            <select name="status" v-model="taskColumnId">
-              <option v-for="column in getBoardColumns(boardId)" :key="column.id" :value="column.id">
-                {{ column.name }}
-              </option>
-            </select>
+          <div class="flex flex-row justify-between">
+            <div class="space-y-2">
+              <label for="task_SalaryCandidate">Дата создания резюме</label>
+              <UPopover :popper="{ placement: 'bottom-start' }">
+                <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(date, 'd MMM, yyy')" />
+                <template #panel="{ close }">
+                  <DatePicker v-model="date" is-required @close="close" />
+                </template>
+              </UPopover>
+            </div>
+            <div class="space-y-2">
+              <p>Текущий Статус</p>
+              <select name="status" v-model="taskColumnId">
+                <option v-for="column in getBoardColumns(boardId)" :key="column.id" :value="column.id">
+                  {{ column.name }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
         <BaseButton :label="buttonLabel" @action="taskToEditState ? editTaskInfos() : createNewTask()" class="bg-savoy" />
@@ -70,7 +70,7 @@
 import { useKanbanStore } from "~~/stores";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { format } from 'date-fns';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 const date = ref(new Date());
 const isFormOpenState = isTaskFormOpen();
@@ -107,6 +107,11 @@ const handleFileChange = (event: Event) => {
 };
 
 const createNewTask = (): void => {
+  if (!taskFIOCandidate.value || !taskDOBCandidate.value || !taskFIOHR.value || !taskPostCandidate.value || !taskSalaryCandidate.value) {
+    alert("Пожалуйста, заполните все обязательные поля");
+    return;
+  }
+
   const newTask = {
     name: taskFIOCandidate.value,
     dateOfBirthCandidate: taskDOBCandidate.value,
@@ -115,14 +120,18 @@ const createNewTask = (): void => {
     salaryCandidate: taskSalaryCandidate.value,
     file: taskFileCandidate.value,
   };
-  if (useValidator(taskFIOCandidate.value, taskDOBCandidate.value, taskFIOHR.value, taskPostCandidate.value, taskSalaryCandidate.value)) {
-    addTaskToColumn(boardId, taskColumnId.value, newTask);
-    resetValues();
-    toggleFormModal(false);
-  }
+
+  addTaskToColumn(boardId, taskColumnId.value, newTask);
+  resetValues();
+  toggleFormModal(false);
 };
 
 const editTaskInfos = (): void => {
+  if (!taskFIOCandidate.value || !taskDOBCandidate.value || !taskFIOHR.value || !taskPostCandidate.value || !taskSalaryCandidate.value) {
+    alert("Пожалуйста, заполните все обязательные поля");
+    return;
+  }
+
   const editedTask = {
     id: taskToEditState.value!.id,
     name: taskFIOCandidate.value,
@@ -132,23 +141,22 @@ const editTaskInfos = (): void => {
     salaryCandidate: taskSalaryCandidate.value,
     file: taskFileCandidate.value,
   };
-  if (useValidator(taskFIOCandidate.value, taskDOBCandidate.value, taskFIOHR.value, taskPostCandidate.value, taskSalaryCandidate.value)) {
-    editTask(
-      boardId,
-      taskToEditState.value!.columnParentId,
-      taskColumnId.value,
-      editedTask
-    );
-    resetValues();
-    toggleFormModal(false);
-  }
+
+  editTask(
+    boardId,
+    taskToEditState.value!.columnParentId,
+    taskColumnId.value,
+    editedTask
+  );
+  resetValues();
+  toggleFormModal(false);
 };
 
 const resetValues = (): void => {
   taskColumnId.value = getBoardColumns(boardId)![0].id;
   taskFIOCandidate.value = "";
   taskDOBCandidate.value = "";
-  taskFIOHR.value = "";
+  taskFIOHR.value = `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`;
   taskPostCandidate.value = "";
   taskSalaryCandidate.value = "";
   taskFileCandidate.value = null;
@@ -170,5 +178,9 @@ watch(isFormOpenState, () => {
   } else {
     resetValues();
   }
+});
+
+onMounted(() => {
+  taskFIOHR.value = `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`;
 });
 </script>

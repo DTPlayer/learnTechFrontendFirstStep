@@ -56,19 +56,80 @@ export const useKanbanStore = defineStore("kanban", {
           });
       }
     },
+    loadBoardData(boardId: string) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        axiosInstance({
+          method: "get",
+          url: `/api/board/get/${boardId}`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => {
+            const board = this.boards?.find((board) => board.id === boardId);
+            if (board) {
+              response.data.cards.forEach((cardData: any) => {
+                const card = cardData.card;
+                const task: Task = {
+                  id: card.id,
+                  name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
+                  dateOfBirthCandidate: "", // Добавьте дату рождения, если она есть в ответе
+                  nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
+                  postCandidate: card.job_title,
+                  salaryCandidate: card.salary.toString(),
+                  file: cardData.files[0]?.file_path || null, // Добавьте файл, если он есть в ответе
+                };
+                const column = board.columns.find((column) => column.name === card.status);
+                if (column) {
+                  column.tasks.push(task);
+                }
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
     addTaskToColumn(
       boardId: string,
       columnId: string,
       taskInfos: Omit<Task, "id">
     ) {
-      const newTask = { id: uuidv4(), ...taskInfos };
-      const board = this.boards?.find((board) => board.id === boardId);
-      if (board) {
-        const column = board.columns.find((column) => column.id === columnId);
-        if (column) {
-          column.tasks.push(newTask);
-          this.saveBoardsToServer();
-        }
+      const token = localStorage.getItem("token");
+      if (token) {
+        const taskData = {
+          first_name_candidate: taskInfos.name.split(' ')[0],
+          last_name_candidate: taskInfos.name.split(' ')[1],
+          middle_name_candidate: taskInfos.name.split(' ')[2],
+          job_title: taskInfos.postCandidate,
+          salary: parseInt(taskInfos.salaryCandidate),
+          board_id: boardId,
+          status: this.getBoardColumns(boardId)?.find(column => column.id === columnId)?.name,
+        };
+
+        axiosInstance({
+          method: "post",
+          url: "/api/card/create",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: taskData,
+        })
+          .then((response) => {
+            const newTask = { id: response.data.id, ...taskInfos }; // Используем ID, возвращенный сервером
+            const board = this.boards?.find((board) => board.id === boardId);
+            if (board) {
+              const column = board.columns.find((column) => column.id === columnId);
+              if (column) {
+                column.tasks.push(newTask);
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     removeTaskFromColumn(boardId: string, columnId: string, editedTask: Task) {
@@ -181,6 +242,7 @@ export const useKanbanStore = defineStore("kanban", {
         this.saveBoardsToServer();
       }
     },
+    // это я даже не помню когда появилось просто забейте на это
     saveBoardsToServer() {
       const token = localStorage.getItem("token");
       if (token) {

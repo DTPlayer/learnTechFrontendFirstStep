@@ -59,10 +59,10 @@ import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 import { useKanbanStore } from "~~/stores";
 import { axiosInstance } from "~/components/axiosInstance";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const store = useKanbanStore();
-const { initializeBoards } = store;
+const { initializeBoards, loadBoardData } = store;
 const { boards } = storeToRefs(store);
 
 const loginView = ref(true);
@@ -86,6 +86,9 @@ const authUser = (e) => {
     },
   }).then((response) => {
     localStorage.setItem("token", response.data.token);
+    localStorage.setItem("userFirstName", response.data.user.first_name);
+    localStorage.setItem("userLastName", response.data.user.last_name);
+    localStorage.setItem("userMiddleName", response.data.user.middle_name);
     loginView.value = false;
     initializeBoards();
   }).catch((error) => {
@@ -94,6 +97,16 @@ const authUser = (e) => {
     setTimeout(() => errorView.value = false, 4000);
   });
 };
-
+onMounted(() => {
+  if (!loginView.value) {
+    initializeBoards();
+  }
+});
 const addBoardState = isAddBoardFormOpen();
+const route = useRoute();
+watch(() => route.params.board, (boardId) => {
+  if (typeof boardId === 'string') {
+    loadBoardData(boardId);
+  }
+});
 </script>
