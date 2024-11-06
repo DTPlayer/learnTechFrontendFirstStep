@@ -16,7 +16,12 @@
 
           <div class="flex flex-col space-y-2">
             <label for="task_DOBCandidate">Дата рождения кандидата</label>
-            <input v-model.trim="taskDOBCandidate" type="text" name="task_DOBCandidate" placeholder="Введите дату рождения кандидата" />
+            <UPopover :popper="{ placement: 'bottom-start' }">
+              <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(dateOfBirth, 'd MMM, yyy')" />
+              <template #panel="{ close }">
+                <DatePicker v-model="dateOfBirth" is-required @close="close" />
+              </template>
+            </UPopover>
           </div>
 
           <div class="flex flex-col space-y-2">
@@ -53,7 +58,7 @@
             <div class="space-y-2">
               <p>Текущий Статус</p>
               <select name="status" v-model="taskColumnId">
-                <option v-for="column in getBoardColumns(boardId)" :key="column.id" :value="column.id">
+                <option v-for="column in store.getBoardColumns(boardId)" :key="column.id" :value="column.id">
                   {{ column.name }}
                 </option>
               </select>
@@ -72,6 +77,7 @@ import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { format } from 'date-fns';
 import { ref, computed, onMounted } from 'vue';
 
+const dateOfBirth = ref(new Date());
 const date = ref(new Date());
 const isFormOpenState = isTaskFormOpen();
 const taskToEditState = taskToEdit();
@@ -87,7 +93,6 @@ const boardId = route.params.board.toString();
 
 // Store
 const store = useKanbanStore();
-const { addTaskToColumn, getBoardColumns, editTask } = store;
 
 // Refs
 const taskColumnId = ref<string>("");
@@ -101,50 +106,125 @@ const taskFileCandidate = ref<File | null>(null);
 // Methods
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
+  if (target.files) {
     taskFileCandidate.value = target.files[0];
+  } else {
+    taskFileCandidate.value = null;
   }
 };
 
 const createNewTask = (): void => {
-  if (!taskFIOCandidate.value || !taskDOBCandidate.value || !taskFIOHR.value || !taskPostCandidate.value || !taskSalaryCandidate.value) {
-    alert("Пожалуйста, заполните все обязательные поля");
+  if (!taskFIOCandidate.value) {
+    alert("Пожалуйста, заполните ФИО кандидата");
     return;
+  }
+
+  if (dateOfBirth.value === null) {
+    alert("Пожалуйста, заполните дату рождения кандидата");
+    return;
+  }
+
+  if (!taskFIOHR.value) {
+    alert("Пожалуйста, заполните ФИО HR");
+    return;
+  }
+
+  if (!taskPostCandidate.value) {
+    alert("Пожалуйста, заполните должность кандидата");
+    return;
+  }
+
+  if (!taskSalaryCandidate.value) {
+    alert("Пожалуйста, заполните ожидаемую ЗП кандидата");
+    return;
+  }
+
+  if (taskFileCandidate.value) {
+    store.uploadFiles(
+      boardId,
+      taskColumnId.value,
+      {
+        id: taskToEditState.value!.id,
+        name: taskFIOCandidate.value,
+        dateOfBirthCandidate: dateOfBirth.value,
+        nameHR: taskFIOHR.value,
+        postCandidate: taskPostCandidate.value,
+        salaryCandidate: taskSalaryCandidate.value,
+        file: taskFileCandidate.value,
+      },
+      taskFileCandidate.value
+    )
   }
 
   const newTask = {
     name: taskFIOCandidate.value,
-    dateOfBirthCandidate: taskDOBCandidate.value,
+    dateOfBirthCandidate: dateOfBirth.value,
     nameHR: taskFIOHR.value,
     postCandidate: taskPostCandidate.value,
     salaryCandidate: taskSalaryCandidate.value,
     file: taskFileCandidate.value,
   };
 
-  addTaskToColumn(boardId, taskColumnId.value, newTask);
+  store.addTaskToColumn(boardId, taskColumnId.value, newTask);
   resetValues();
   toggleFormModal(false);
 };
 
 const editTaskInfos = (): void => {
-  if (!taskFIOCandidate.value || !taskDOBCandidate.value || !taskFIOHR.value || !taskPostCandidate.value || !taskSalaryCandidate.value) {
-    alert("Пожалуйста, заполните все обязательные поля");
+  if (!taskFIOCandidate.value) {
+    alert("Пожалойста, заполните ФИО кандидата");
     return;
+  }
+
+  if (dateOfBirth.value === null) {
+    alert("Пожалуйста, заполните дату рождения кандидата");
+    return;
+  }
+
+  if (!taskFIOHR.value) {
+    alert("Пожалуйста, заполните ФИО HR");
+    return;
+  }
+
+  if (!taskPostCandidate.value) {
+    alert("Пожалуйста, заполните должность кандидата");
+    return;
+  }
+
+  if (!taskSalaryCandidate.value) {
+    alert("Пожалуйста, заполните ожидаемую ЗП кандидата");
+    return;
+  }
+
+  if (taskFileCandidate.value) {
+    store.uploadFiles(
+      boardId,
+      taskColumnId.value,
+      {
+        id: taskToEditState.value!.id,
+        name: taskFIOCandidate.value,
+        dateOfBirthCandidate: dateOfBirth.value,
+        nameHR: taskFIOHR.value,
+        postCandidate: taskPostCandidate.value,
+        salaryCandidate: taskSalaryCandidate.value,
+        file: taskFileCandidate.value,
+      },
+      taskFileCandidate.value
+    )
   }
 
   const editedTask = {
     id: taskToEditState.value!.id,
     name: taskFIOCandidate.value,
-    dateOfBirthCandidate: taskDOBCandidate.value,
+    dateOfBirthCandidate: dateOfBirth.value,
     nameHR: taskFIOHR.value,
     postCandidate: taskPostCandidate.value,
     salaryCandidate: taskSalaryCandidate.value,
     file: taskFileCandidate.value,
   };
 
-  editTask(
+  store.editTaskData(
     boardId,
-    taskToEditState.value!.columnParentId,
     taskColumnId.value,
     editedTask
   );
@@ -153,7 +233,7 @@ const editTaskInfos = (): void => {
 };
 
 const resetValues = (): void => {
-  taskColumnId.value = getBoardColumns(boardId)![0].id;
+  taskColumnId.value = store.getBoardColumns(boardId)![0].id;
   taskFIOCandidate.value = "";
   taskDOBCandidate.value = "";
   taskFIOHR.value = `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`;

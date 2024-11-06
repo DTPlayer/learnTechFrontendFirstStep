@@ -9,7 +9,13 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useKanbanStore } from "~~/stores";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const store = useKanbanStore();
+
+if (import.meta.client) {
+  store.loadBoardData(router.currentRoute.value.params.board.toString());
+}
 
 const { boards } = storeToRefs(store);
 </script>

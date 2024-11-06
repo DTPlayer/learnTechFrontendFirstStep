@@ -62,7 +62,7 @@ import { axiosInstance } from "~/components/axiosInstance";
 import { onMounted, ref } from "vue";
 
 const store = useKanbanStore();
-const { initializeBoards, loadBoardData } = store;
+const { initializeBoards } = store;
 const { boards } = storeToRefs(store);
 
 const loginView = ref(true);
@@ -104,9 +104,4 @@ onMounted(() => {
 });
 const addBoardState = isAddBoardFormOpen();
 const route = useRoute();
-watch(() => route.params.board, (boardId) => {
-  if (typeof boardId === 'string') {
-    loadBoardData(boardId);
-  }
-});
 </script>
