@@ -66,6 +66,7 @@
           </div>
         </div>
         <BaseButton :label="buttonLabel" @action="taskToEditState ? editTaskInfos() : createNewTask()" class="bg-savoy" />
+        <BaseButton :label="buttonLabel2" @action="taskIdToDelete ? taskToDelete1(taskIdToDelete) : null" class="bg-savoy" />
       </div>
     </div>
   </transition>
@@ -81,6 +82,7 @@ const dateOfBirth = ref(new Date());
 const date = ref(new Date());
 const isFormOpenState = isTaskFormOpen();
 const taskToEditState = taskToEdit();
+
 
 const toggleFormModal = (isOpen: boolean): void => {
   isFormOpenState.value = isOpen;
@@ -102,6 +104,33 @@ const taskFIOHR = ref<string>("");
 const taskPostCandidate = ref<string>("");
 const taskSalaryCandidate = ref<string>("");
 const taskFileCandidate = ref<File | null>(null);
+const taskIdToDelete = ref<string | null>(null);
+
+
+function taskToDelete1(taskId: string | null) {
+  if (taskId) {
+    store.DeleteTaskFromColumn(taskId, boardId, taskColumnId, {
+        id: taskToEditState.value!.id,
+        name: taskFIOCandidate.value,
+        dateOfBirthCandidate: dateOfBirth.value,
+        nameHR: taskFIOHR.value,
+        postCandidate: taskPostCandidate.value,
+        salaryCandidate: taskSalaryCandidate.value,
+        file: taskFileCandidate.value,
+      },);
+  } else {
+    console.warn("ID задачи не задан, удаление невозможно.");
+  }
+}
+
+watch(isFormOpenState, () => {
+  if (taskToEditState.value !== null) {
+    // Устанавливаем другие значения задачи
+    taskIdToDelete.value = taskToEditState.value.id; // Устанавливаем ID задачи
+  } else {
+    resetValues();
+  }
+});
 
 // Methods
 const handleFileChange = (event: Event) => {
@@ -144,7 +173,6 @@ const createNewTask = (): void => {
       boardId,
       taskColumnId.value,
       {
-        id: taskToEditState.value!.id,
         name: taskFIOCandidate.value,
         dateOfBirthCandidate: dateOfBirth.value,
         nameHR: taskFIOHR.value,
@@ -168,8 +196,7 @@ const createNewTask = (): void => {
   store.addTaskToColumn(boardId, taskColumnId.value, newTask);
   resetValues();
   toggleFormModal(false);
-};
-
+}
 const editTaskInfos = (): void => {
   if (!taskFIOCandidate.value) {
     alert("Пожалойста, заполните ФИО кандидата");
@@ -244,6 +271,9 @@ const resetValues = (): void => {
 
 const buttonLabel = computed(() => {
   return taskToEditState.value ? "Сохранить Изменения" : "Добавить Карточку";
+});
+const buttonLabel2 = computed(() => {
+  return taskToEditState.value ? "Удалить карточку" : "Удалить карточку";
 });
 
 watch(isFormOpenState, () => {

@@ -127,7 +127,6 @@ export const useKanbanStore = defineStore("kanban", {
           status: this.getBoardColumns(boardId)?.find(column => column.id === columnId)?.name,
         };
 
-        console.log(taskData);
 
         axiosInstance({
           method: "post",
@@ -149,6 +148,7 @@ export const useKanbanStore = defineStore("kanban", {
           })
           .catch((error) => {
             console.log(error);
+            console.log(taskData);
           });
       }
     },
@@ -160,6 +160,30 @@ export const useKanbanStore = defineStore("kanban", {
           column.tasks = column.tasks.filter((task) => task.id !== editedTask.id);
         }
       }
+    },
+    DeleteTaskFromColumn(editedTask: any, boardId: string, columnId: any, taskInfos: any) {
+      const token = localStorage.getItem("token");
+      axiosInstance({
+        method: "post",
+        url: `/api/card/${editedTask}/delete`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          const newTask = { id: response.data.id, ...taskInfos };
+          const board = this.boards?.find((board) => board.id === boardId);
+          if (board) {
+            const column = board.columns.find((column) => column.id === columnId);
+            if (column) {
+              column.tasks.push(newTask);
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log(editedTask);
+        });
     },
     createNewBoard(boardName: string) {
       const boardTemplate: Board = {
