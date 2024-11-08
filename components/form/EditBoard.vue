@@ -53,6 +53,7 @@ const boardFormState = isEditBoardFormOpen();
 const store = useKanbanStore();
 const { boards } = storeToRefs(store);
 const { editBoard, getBoardColumns, deleteBoardOnServer } = store;
+import { IColumn } from "~/types/";
 
 // Refs
 const route = useRoute();
@@ -60,7 +61,7 @@ const router = useRouter();
 const boardId = route.params.board.toString();
 
 const boardName = ref<string>("");
-const boardColumns = ref<Column[] | null>(null);
+const boardColumns = ref<IColumn[] | null>(null);
 
 const validateColumnsName = (): boolean => {
   const columnsNames = boardColumns.value!.map((column) => column.name);

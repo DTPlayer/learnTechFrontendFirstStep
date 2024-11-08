@@ -32,7 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { useKanbanStore } from "~~/stores";
+import { useKanbanStore } from "~/stores";
+import TaskCard from "~/components/TaskCard.vue";
 //Route
 const route = useRoute();
 const boardId = route.params.board.toString();
@@ -75,3 +76,6 @@ const countTasks = (columnId: string): number => {
   return getColumnTasks(boardId, columnId)!.length;
 };
 </script>
+
+<style scoped>
+</style>

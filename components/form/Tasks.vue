@@ -66,7 +66,7 @@
           </div>
         </div>
         <BaseButton :label="buttonLabel" @action="taskToEditState ? editTaskInfos() : createNewTask()" class="bg-savoy" />
-        <BaseButton :label="buttonLabel2" @action="taskIdToDelete ? taskToDelete1(taskIdToDelete) : null" class="bg-savoy" />
+        <BaseButton v-if="taskToEditState" :label="removeLabel" @click="() => { taskToDelete(taskIdToDelete) }" class="bg-savoy" />
       </div>
     </div>
   </transition>
@@ -107,7 +107,7 @@ const taskFileCandidate = ref<File | null>(null);
 const taskIdToDelete = ref<string | null>(null);
 
 
-function taskToDelete1(taskId: string | null) {
+function taskToDelete(taskId: string | null) {
   if (taskId) {
     store.DeleteTaskFromColumn(taskId, boardId, taskColumnId, {
         id: taskToEditState.value!.id,
@@ -117,7 +117,18 @@ function taskToDelete1(taskId: string | null) {
         postCandidate: taskPostCandidate.value,
         salaryCandidate: taskSalaryCandidate.value,
         file: taskFileCandidate.value,
-      },);
+      },).then((result) => {
+      if (result) {
+        console.log("Task deleted successfully");
+        location.reload();
+      } else {
+        console.log("Failed to delete task");
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
+
+    toggleFormModal(false);
   } else {
     console.warn("ID задачи не задан, удаление невозможно.");
   }
@@ -181,6 +192,7 @@ const createNewTask = (): void => {
   resetValues();
   toggleFormModal(false);
 }
+
 const editTaskInfos = (): void => {
   if (!taskFIOCandidate.value) {
     alert("Пожалойста, заполните ФИО кандидата");
@@ -256,7 +268,7 @@ const resetValues = (): void => {
 const buttonLabel = computed(() => {
   return taskToEditState.value ? "Сохранить Изменения" : "Добавить Карточку";
 });
-const buttonLabel2 = computed(() => {
+const removeLabel = computed(() => {
   return taskToEditState.value ? "Удалить карточку" : "Удалить карточку";
 });
 

@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { useKanbanStore } from "~~/stores";
+import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
+import { storeToRefs } from "pinia";
+import MyCustomIcon from '~/components/MyCustomIcon.vue';
+import AddBoard from '~/components/form/AddBoard.vue';
+import { ref, computed, onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { watchEffect } from "vue";
+
+const store = useKanbanStore();
+const boardFormState = ref(false);
+
+const { boards } = storeToRefs(store);
+
+const boardsCount = computed(() => {
+  if (!boards.value) return 0;
+  return boards.value?.length;
+});
+</script>
+
 <template>
   <main class="flex h-screen w-screen">
     <aside
@@ -31,31 +52,11 @@
         <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
       </div>
     </aside>
-    <NuxtPage />
-    <AddBoard :boardFormState="boardFormState" @update:boardFormState="updateBoardFormState" />
+    <slot />
+    <AddBoard :boardFormState="boardFormState" @update:boardFormState="() => {}" />
   </main>
 </template>
-<script setup lang="ts">
-import { useKanbanStore } from "~~/stores";
-import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
-import { storeToRefs } from "pinia";
-import MyCustomIcon from '~/components/MyCustomIcon.vue';
-import AddBoard from '~/components/form/AddBoard.vue';
-import { ref, computed, onMounted, watch } from "vue";
-import { useRoute } from 'vue-router';
 
-const boardFormState = ref(false);
+<style scoped>
 
-const store = useKanbanStore();
-
-const { boards } = storeToRefs(store);
-const { initializeBoards, loadBoardData } = store;
-
-onMounted(() => {
-  initializeBoards();
-});
-
-const updateBoardFormState = (newState: boolean) => {
-  boardFormState.value = newState;
-};
-</script>
+</style>

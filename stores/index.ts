@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { v4 as uuidv4 } from "uuid";
 import { useStorage } from "@vueuse/core";
 import { axiosInstance } from "~/components/axiosInstance";
-import type { Board, Column, Task } from "~/types/";
+import type { Board, IColumn, Task } from "~/types/";
 import {
   type Builtin,
   RawSymbol,
@@ -15,11 +15,12 @@ import type { UnwrapRef } from "vue";
 export const useKanbanStore = defineStore("kanban", {
   state: () => ({
     boards: useStorage("board", [] as Board[] | undefined),
+    isLoading: false,
   }),
   getters: {
     getBoardColumns:
       (state) =>
-        (boardId: string): Column[] | undefined => {
+        (boardId: string): IColumn[] | undefined => {
           const findBoard = state.boards?.find((board) => board.id === boardId);
           return findBoard?.columns;
         },
@@ -34,6 +35,7 @@ export const useKanbanStore = defineStore("kanban", {
   },
   actions: {
     initializeBoards() {
+      this.isLoading = true;
       const token = localStorage.getItem("token");
       if (token) {
         axiosInstance({
@@ -56,6 +58,7 @@ export const useKanbanStore = defineStore("kanban", {
                 { id: uuidv4(), name: "Оффер", tasks: [] },
               ],
             }));
+            this.isLoading = true;
           })
           .catch((error) => {
             console.log(error);
@@ -65,6 +68,7 @@ export const useKanbanStore = defineStore("kanban", {
       }
     },
     loadBoardData(boardId: string) {
+      this.isLoading = true;
       const token = localStorage.getItem("token");
       if (token) {
         axiosInstance({
@@ -81,18 +85,20 @@ export const useKanbanStore = defineStore("kanban", {
               board.columns.forEach(column => column.tasks = []);
               response.data.cards.forEach((cardData: any) => {
                 const card = cardData.card;
-                const task: Task = {
+                const task: any = {
                   id: card.id,
                   name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
-                  file: cardData.files[0]?.file_path || null, // Добавьте файл, если он есть в ответе
+                  file: cardData.files[0]?.file_path || null,
                 };
                 const column = board.columns.find((column) => column.name === card.status);
                 if (column) {
                   column.tasks.push(task);
+                  console.log(column.tasks)
                 }
+                this.isLoading = false;
               });
             }
           })
@@ -167,29 +173,25 @@ export const useKanbanStore = defineStore("kanban", {
         }
       }
     },
-    DeleteTaskFromColumn(editedTask: any, boardId: string, columnId: any, taskInfos: any) {
-      const token = localStorage.getItem("token");
-      axiosInstance({
-        method: "post",
-        url: `/api/card/${editedTask}/delete`,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          const newTask = { id: response.data.id, ...taskInfos };
-          const board = this.boards?.find((board) => board.id === boardId);
-          if (board) {
-            const column = board.columns.find((column) => column.id === columnId);
-            if (column) {
-              column.tasks.push(newTask);
-            }
-          }
+    DeleteTaskFromColumn(editedTask: any, boardId: string, columnId: any, taskInfos: any): Promise<boolean> {
+      return new Promise<boolean>((resolve, reject) => {
+        const token = localStorage.getItem("token");
+        axiosInstance({
+          method: "post",
+          url: `/api/card/${editedTask}/delete`,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((error) => {
-          console.log(error);
-          console.log(editedTask);
-        });
+          .then((response) => {
+            resolve(true);
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log(editedTask);
+            resolve(false)
+          });
+      })
     },
     createNewBoard(boardName: string): Promise<boolean> {
       return new Promise((resolve, reject) => {

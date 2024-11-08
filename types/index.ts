@@ -7,12 +7,12 @@ export interface Task extends Base {
   description: string;
 }
 
-export interface Column extends Base {
-  tasks: Task[];
+export interface IColumn extends Base {
+  tasks: any[];
 }
 
 export interface Board extends Base {
-  columns: Column[];
+  columns: IColumn[];
 }
 
 export interface TaskToEdit extends Task {
