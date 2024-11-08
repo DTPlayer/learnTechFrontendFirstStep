@@ -66,14 +66,6 @@ export const useKanbanStore = defineStore("kanban", {
       }
     },
     loadBoardData(boardId: string) {
-      const board = this.boards?.find((board) => board.id === boardId);
-      if (board) {
-        board.columns = board.columns.map((column) => ({
-          ...column,
-          tasks: [],
-        }));
-      }
-
       const token = localStorage.getItem("token");
       if (token) {
         axiosInstance({
@@ -115,6 +107,15 @@ export const useKanbanStore = defineStore("kanban", {
       taskInfos: any,
       isEditing = false
     ) {
+
+      const board = this.boards?.find((board) => board.id === boardId);
+      if (board) {
+        const column = board.columns.find((column) => column.id === columnId);
+        if (column) {
+          column.tasks = [];
+        }
+      }
+
       const token = localStorage.getItem("token");
       if (token) {
         const taskData = {
@@ -144,6 +145,11 @@ export const useKanbanStore = defineStore("kanban", {
               if (column) {
                 column.tasks.push(newTask);
               }
+            }
+
+            if (!isEditing && taskInfos.file) {
+              taskInfos.id = response.data.cards[-1].id;
+              this.uploadFiles(taskData.board_id, response.data.cards[-1].id, taskInfos, taskInfos.file)
             }
           })
           .catch((error) => {
@@ -185,39 +191,44 @@ export const useKanbanStore = defineStore("kanban", {
           console.log(editedTask);
         });
     },
-    createNewBoard(boardName: string) {
-      const boardTemplate: Board = {
-        id: uuidv4(),
-        name: boardName,
-        columns: [
-          { id: uuidv4(), name: "Стакан резюме", tasks: [] },
-          { id: uuidv4(), name: "Теплый контакт", tasks: [] },
-          { id: uuidv4(), name: "Скрининг", tasks: [] },
-          { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
-          { id: uuidv4(), name: "Проверка СБ", tasks: [] },
-          { id: uuidv4(), name: "Оффер", tasks: [] },
-        ],
-      };
-
-      const token = localStorage.getItem("token");
-      if (token) {
-        axiosInstance({
-          method: "post",
-          url: "/api/board/create",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: boardTemplate,
-        })
-          .then((response) => {
-            this.boards = response.data.boards;
+    createNewBoard(boardName: string): Promise<boolean> {
+      return new Promise((resolve, reject) => {
+        console.log("createNewBoard");
+        const boardTemplate: Board = {
+          id: uuidv4(),
+          name: boardName,
+          columns: [
+            { id: uuidv4(), name: "Стакан резюме", tasks: [] },
+            { id: uuidv4(), name: "Теплый контакт", tasks: [] },
+            { id: uuidv4(), name: "Скрининг", tasks: [] },
+            { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
+            { id: uuidv4(), name: "Проверка СБ", tasks: [] },
+            { id: uuidv4(), name: "Оффер", tasks: [] },
+          ],
+        };
+        console.log(boardTemplate);
+        const token = localStorage.getItem("token");
+        if (token) {
+          axiosInstance({
+            method: "post",
+            url: "/api/board/create",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            data: boardTemplate,
           })
-          .catch((error) => {
-            console.log(error);
-            localStorage.removeItem("token");
-            location.reload();
-          });
-      }
+            .then((response) => {
+              console.log(response.data.boards);
+              this.initializeBoards();
+              resolve(true);
+            })
+            .catch((error) => {
+              console.log(error);
+              localStorage.removeItem("token");
+              resolve(false);
+            });
+        }
+      })
     },
 
     uploadFiles(boardId: string, columnId: string, taskInfos: any, file: File) {

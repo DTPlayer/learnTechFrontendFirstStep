@@ -41,17 +41,18 @@
 
   <section v-else class="w-full h-full p-10 overflow-y-auto">
     <h1 class="mb-24">Ваши Доски:</h1>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-auto gap-10" v-if="boards!.length > 0">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-auto gap-10" v-if="boards && boards!.length > 0">
       <div v-for="board in boards" class="rounded-2xl bg-savoy p-5 cursor-pointer w-full h-full hover:bg-darkGreen transition-colors" @click="() => $router.push(`/${board.id}`)">
         <ViewColumnsIcon class="w-10 h-10 mb-5" />
         <h2>{{ board.name }}</h2>
       </div>
     </div>
-    <div @click="() => (addBoardState = true)" class="rounded-2xl bg-savoy p-5 cursor-pointer w-full sm:w-80 h-40 hover:bg-red-400 transition-colors" v-else>
+    <div @click="() => (boardFormState = true)" class="rounded-2xl bg-savoy p-5 cursor-pointer w-full sm:w-80 h-40 hover:bg-red-400 transition-colors" v-else>
       <ViewColumnsIcon class="w-10 h-10 mb-5" />
       <h2>+ Создать Доску</h2>
     </div>
   </section>
+  <AddBoard :boardFormState="boardFormState" @update:boardFormState="updateBoardFormState" />
 </template>
 
 <script setup lang="ts">
@@ -60,6 +61,7 @@ import { storeToRefs } from "pinia";
 import { useKanbanStore } from "~~/stores";
 import { axiosInstance } from "~/components/axiosInstance";
 import { onMounted, ref } from "vue";
+import AddBoard from "~/components/form/AddBoard.vue";
 
 const store = useKanbanStore();
 const { initializeBoards } = store;
@@ -67,6 +69,7 @@ const { boards } = storeToRefs(store);
 
 const loginView = ref(true);
 const errorView = ref(false);
+const boardFormState = ref(false);
 
 if (import.meta.client) {
   if (localStorage.getItem("token")) {
@@ -74,6 +77,10 @@ if (import.meta.client) {
     initializeBoards();
   }
 }
+
+const updateBoardFormState = (newState: boolean) => {
+  boardFormState.value = newState;
+};
 
 
 const authUser = (e) => {

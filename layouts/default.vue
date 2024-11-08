@@ -12,7 +12,7 @@
         </NuxtLink>
         <p class="mb-5 tracking-widest">ВСЕ ДОСКИ ({{ boardsCount }})</p>
       </div>
-      <div v-if="boards!.length > 0">
+      <div v-if="boards && boards!.length > 0">
         <NuxtLink
           v-for="board in boards"
           :key="board.id"
@@ -50,6 +50,7 @@ const store = useKanbanStore();
 const { boards } = storeToRefs(store);
 
 const boardsCount = computed(() => {
+  if (!boards.value) return 0;
   return boards.value?.length;
 });
 

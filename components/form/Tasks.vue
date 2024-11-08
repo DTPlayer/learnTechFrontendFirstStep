@@ -168,22 +168,6 @@ const createNewTask = (): void => {
     return;
   }
 
-  if (taskFileCandidate.value) {
-    store.uploadFiles(
-      boardId,
-      taskColumnId.value,
-      {
-        name: taskFIOCandidate.value,
-        dateOfBirthCandidate: dateOfBirth.value,
-        nameHR: taskFIOHR.value,
-        postCandidate: taskPostCandidate.value,
-        salaryCandidate: taskSalaryCandidate.value,
-        file: taskFileCandidate.value,
-      },
-      taskFileCandidate.value
-    )
-  }
-
   const newTask = {
     name: taskFIOCandidate.value,
     dateOfBirthCandidate: dateOfBirth.value,

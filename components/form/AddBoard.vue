@@ -23,7 +23,7 @@
             />
           </div>
         </div>
-        <BaseButton label="Создать Доску" @action="useCreateNewBoard" class="bg-savoy"/>
+        <BaseButton label="Создать Доску" @click="useCreateNewBoard" class="bg-savoy"/>
       </div>
     </div>
   </transition>
@@ -48,9 +48,20 @@ const boardName = ref<string>("");
 //Store
 const store = useKanbanStore();
 
-const useCreateNewBoard = () => {
-  store.createNewBoard(boardName.value);
-  emit('update:boardFormState', false);
-  location.reload();
+const useCreateNewBoard = (e: Event) => {
+  e.preventDefault();
+
+  if (boardName.value) {
+    emit('update:boardFormState', false);
+
+    store.createNewBoard(boardName.value).then((result) => {
+      if (result) {
+        boardName.value = "";
+        console.log("Board created successfully");
+      } else {
+        console.log("Failed to create board");
+      }
+    })
+  }
 };
 </script>
