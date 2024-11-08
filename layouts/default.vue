@@ -41,20 +41,33 @@ import { ViewColumnsIcon } from "@heroicons/vue/24/outline";
 import { storeToRefs } from "pinia";
 import MyCustomIcon from '~/components/MyCustomIcon.vue';
 import AddBoard from '~/components/form/AddBoard.vue';
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from 'vue-router';
 
 const boardFormState = ref(false);
 
 const store = useKanbanStore();
 
 const { boards } = storeToRefs(store);
+const { initializeBoards, loadBoardData } = store;
 
 const boardsCount = computed(() => {
   if (!boards.value) return 0;
   return boards.value?.length;
 });
 
+onMounted(() => {
+  initializeBoards();
+});
+
 const updateBoardFormState = (newState: boolean) => {
   boardFormState.value = newState;
 };
+
+const route = useRoute();
+watch(() => route.params.board, (boardId) => {
+  if (typeof boardId === 'string') {
+    loadBoardData(boardId);
+  }
+});
 </script>

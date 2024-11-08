@@ -64,8 +64,8 @@ import { onMounted, ref } from "vue";
 import AddBoard from "~/components/form/AddBoard.vue";
 
 const store = useKanbanStore();
-const { initializeBoards } = store;
 const { boards } = storeToRefs(store);
+const { initializeBoards, loadBoardData } = store;
 
 const loginView = ref(true);
 const errorView = ref(false);
@@ -110,6 +110,10 @@ onMounted(() => {
     initializeBoards();
   }
 });
-const addBoardState = isAddBoardFormOpen();
 const route = useRoute();
+watch(() => route.params.board, (boardId) => {
+  if (typeof boardId === 'string') {
+    loadBoardData(boardId);
+  }
+});
 </script>

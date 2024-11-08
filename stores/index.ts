@@ -44,8 +44,8 @@ export const useKanbanStore = defineStore("kanban", {
           },
         })
           .then((response) => {
-            // Добавляем колонки к каждой доске
-            const boardsWithColumns = response.data.boards.map((board: Board) => ({
+            // Очищаем существующие доски и столбцы
+            this.boards = response.data.boards.map((board: Board) => ({
               ...board,
               columns: [
                 { id: uuidv4(), name: "Стакан резюме", tasks: [] },
@@ -56,7 +56,6 @@ export const useKanbanStore = defineStore("kanban", {
                 { id: uuidv4(), name: "Оффер", tasks: [] },
               ],
             }));
-            this.boards = boardsWithColumns;
           })
           .catch((error) => {
             console.log(error);
@@ -78,10 +77,11 @@ export const useKanbanStore = defineStore("kanban", {
           .then((response) => {
             const board = this.boards?.find((board) => board.id === boardId);
             if (board) {
+              // Очищаем существующие столбцы и задачи
+              board.columns.forEach(column => column.tasks = []);
               response.data.cards.forEach((cardData: any) => {
                 const card = cardData.card;
-                // @ts-ignore
-                const task = {
+                const task: Task = {
                   id: card.id,
                   name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
@@ -91,7 +91,7 @@ export const useKanbanStore = defineStore("kanban", {
                 };
                 const column = board.columns.find((column) => column.name === card.status);
                 if (column) {
-                  column.tasks.push(task as any);
+                  column.tasks.push(task);
                 }
               });
             }
