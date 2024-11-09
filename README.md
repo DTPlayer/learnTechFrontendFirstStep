@@ -47,9 +47,3 @@ $ yarn dev
 # npm
 $ npm run dev
 ```
-
-
-## Authors
-
-- [@anteroselin](https://www.github.com/anteroselin)
-- [@arthurlee](https://www.github.com/arthur9371)
