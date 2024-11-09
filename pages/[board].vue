@@ -13,20 +13,30 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const store = useKanbanStore();
 
-if (import.meta.client) {
-  console.log(store); // Check if store is properly initialized
-  console.log(typeof store.loadBoardData); // Check if loadBoardData is a function
-
-  if (import.meta.client) {
-    const boardId = router.currentRoute.value.params.board;
-    if (boardId) {
-      if (typeof store.loadBoardData === 'function') {
-        store.loadBoardData(boardId.toString());
-      } else {
-        console.error('loadBoardData is not a function');
-      }
+const updateBoardData = () => {
+  const boardId = router.currentRoute.value.params.board;
+  if (boardId) {
+    if (typeof store.loadBoardData === 'function') {
+      store.loadBoardData(boardId.toString());
+    } else {
+      console.error('loadBoardData is not a function');
     }
   }
+}
+
+
+if (import.meta.client) {
+  onMounted(() => {
+    updateBoardData();
+  });
+
+  const interval = setInterval(() => {
+    updateBoardData();
+  }, 2500);
+
+  onUnmounted(() => {
+    clearInterval(interval);
+  })
 }
 
 definePageMeta({

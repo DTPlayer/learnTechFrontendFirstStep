@@ -17,6 +17,11 @@ const boardsCount = computed(() => {
   if (!boards.value) return 0;
   return boards.value?.length;
 });
+
+const updateBoardFormState = (newState: boolean) => {
+  boardFormState.value = newState;
+};
+
 </script>
 
 <template>
@@ -53,7 +58,7 @@ const boardsCount = computed(() => {
       </div>
     </aside>
     <slot />
-    <AddBoard :boardFormState="boardFormState" @update:boardFormState="() => {}" />
+    <AddBoard :boardFormState="boardFormState" @update:boardFormState="updateBoardFormState" />
   </main>
 </template>
 
