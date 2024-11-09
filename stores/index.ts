@@ -112,8 +112,8 @@ export const useKanbanStore = defineStore("kanban", {
       columnId: string,
       taskInfos: any,
       isEditing = false
-    ) {
-
+    ): void {
+      this.isLoading = true;
       const board = this.boards?.find((board) => board.id === boardId);
       if (board) {
         const column = board.columns.find((column) => column.id === columnId);
@@ -157,10 +157,13 @@ export const useKanbanStore = defineStore("kanban", {
               taskInfos.id = response.data.cards[-1].id;
               this.uploadFiles(taskData.board_id, response.data.cards[-1].id, taskInfos, taskInfos.file)
             }
+
+            this.isLoading = false;
           })
           .catch((error) => {
             console.log(error);
             console.log(taskData);
+            this.isLoading = false;
           });
       }
     },
@@ -275,7 +278,6 @@ export const useKanbanStore = defineStore("kanban", {
       editedTask: any
     ): void {
       this.removeTaskFromColumn(boardId, columnId, editedTask);
-      this.addTaskToColumn(boardId, columnId, editedTask, true);
       const board = this.boards?.find((board) => board.id === boardId);
       if (board) {
         const column = board.columns.find((column) => column.id === columnId);
@@ -285,6 +287,7 @@ export const useKanbanStore = defineStore("kanban", {
           );
         }
       }
+      this.addTaskToColumn(boardId, columnId, editedTask, true);
     },
 
     editTask(
@@ -298,7 +301,7 @@ export const useKanbanStore = defineStore("kanban", {
         const column = board.columns.find((column) => column.id === columnId);
         if (column) {
           if (newColumnId !== columnId) {
-            this.removeTaskFromColumn(boardId, columnId, editedTask);
+            this.removeTaskFromColumn(boardId, newColumnId, editedTask);
             this.addTaskToColumn(boardId, newColumnId, editedTask, true);
           } else {
             column.tasks = column.tasks.map((task: Task) =>

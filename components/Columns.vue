@@ -47,14 +47,14 @@ const isFormOpenState = isTaskFormOpen();
 const taskToEditState = taskToEdit();
 
 //Methods
-const openEditForm = (task: Task, columnId: string): void => {
+const openEditForm = (task: any, columnId: string): void => {
   isFormOpenState.value = true;
   taskToEditState.value = { ...task, columnParentId: columnId };
 };
 
 const startDrag = (
   event: DragEvent,
-  item: Task,
+  item: any,
   fromColumnId: string
 ): void => {
   event.dataTransfer!.dropEffect = "move";

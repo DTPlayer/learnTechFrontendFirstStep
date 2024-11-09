@@ -188,9 +188,13 @@ const createNewTask = (): void => {
     file: taskFileCandidate.value,
   };
 
-  store.addTaskToColumn(boardId, taskColumnId.value, newTask);
-  resetValues();
-  toggleFormModal(false);
+  store.addTaskToColumn(boardId, taskColumnId.value, newTask)
+
+  watchEffect(() => {
+    if (!store.isLoading) {
+      location.reload();
+    }
+  })
 }
 
 const editTaskInfos = (): void => {
