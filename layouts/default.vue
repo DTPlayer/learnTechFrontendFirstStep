@@ -34,6 +34,7 @@
         <ButtonBase
           label="Выход"
           class="bg-red-600"
+          @action="logout"
         />
       </div>
     </aside>
@@ -69,4 +70,9 @@ const boardsCount = computed(() => {
   if (!boards.value) return 0;
   return boards.value?.length;
 });
+
+const logout = () => {
+  localStorage.removeItem('token')
+  window.location.href = '/'
+}
 </script>

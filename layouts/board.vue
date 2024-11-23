@@ -23,6 +23,11 @@ const updateBoardFormState = (newState: boolean) => {
   boardFormState.value = newState;
 };
 
+const logout = () => {
+  localStorage.removeItem('token')
+  window.location.href = '/'
+}
+
 </script>
 
 <template>
@@ -61,6 +66,7 @@ const updateBoardFormState = (newState: boolean) => {
         <ButtonBase
           label="Выход"
           class="bg-red-600"
+          @action="logout"
         />
       </div>
     </aside>
