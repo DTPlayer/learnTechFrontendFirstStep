@@ -69,6 +69,7 @@ const onDrop = (event: DragEvent, columnId: string): void => {
   const item = getColumnTasks(boardId, fromColumnId)?.find(
     (task) => task.id === itemID
   );
+  store.localRemoveTask(boardId, fromColumnId, itemID);
   editTask(boardId, fromColumnId, columnId, item!);
 };
 

@@ -92,6 +92,7 @@ export const useKanbanStore = defineStore("kanban", {
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
                   file: cardData.files[0]?.file_path || null,
+                  columnStatus: card.status
                 };
                 const column = board.columns.find((column) => column.name === card.status);
                 if (column) {
@@ -288,6 +289,16 @@ export const useKanbanStore = defineStore("kanban", {
         }
       }
       this.addTaskToColumn(boardId, columnId, editedTask, true);
+    },
+
+    localRemoveTask(boardId: string, columnId: string, editedTask: any) {
+      const board = this.boards?.find((board) => board.id === boardId);
+      if (board) {
+        const column = board.columns.find((column) => column.id === columnId);
+        if (column) {
+          column.tasks = column.tasks.filter((task) => task.id !== editedTask);
+        }
+      }
     },
 
     editTask(
