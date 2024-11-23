@@ -29,16 +29,7 @@ if (import.meta.client) {
   onMounted(() => {
     updateBoardData();
   });
-
-  const interval = setInterval(() => {
-    updateBoardData();
-  }, 2500);
-
-  onUnmounted(() => {
-    clearInterval(interval);
-  })
 }
-
 definePageMeta({
   layout: "board",
 });
