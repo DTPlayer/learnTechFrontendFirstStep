@@ -109,6 +109,7 @@ const store = useKanbanStore();
 const taskColumnId = ref<string>("");
 const taskFIOCandidate = ref<string>("");
 const taskDOBCandidate = ref<string>("");
+const taskDateOfBirth = ref<string>("");
 const taskFIOHR = ref<string>("");
 const taskPostCandidate = ref<string>("");
 const taskSalaryCandidate = ref<string>("");
@@ -292,6 +293,7 @@ const removeLabel = computed(() => {
 
 watch(isFormOpenState, () => {
   if (taskToEditState.value !== null) {
+    console.log(taskToEditState.value.dateOfBirthCandidate)
     taskFIOCandidate.value = taskToEditState.value.name;
     taskDOBCandidate.value = taskToEditState.value.dateOfBirthCandidate;
     taskFIOHR.value = taskToEditState.value.nameHR;
@@ -301,6 +303,7 @@ watch(isFormOpenState, () => {
     taskFileCandidate.value = taskToEditState.value.file;
     taskFileCandidateInterview.value = taskToEditState.value.file;
     taskFileCandidateOffer.value = taskToEditState.value.file;
+    dateOfBirth.value = new Date(Date.parse(taskToEditState.value.dateOfBirthCandidate));
   } else {
     resetValues();
   }

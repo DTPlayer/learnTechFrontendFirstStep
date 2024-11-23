@@ -53,7 +53,7 @@ export const useKanbanStore = defineStore("kanban", {
                 { id: uuidv4(), name: "Стакан резюме", tasks: [] },
                 { id: uuidv4(), name: "Теплый контакт", tasks: [] },
                 { id: uuidv4(), name: "Скрининг", tasks: [] },
-                { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
+                { id: uuidv4(), name: "Интервью", tasks: [] },
                 { id: uuidv4(), name: "Проверка СБ", tasks: [] },
                 { id: uuidv4(), name: "Оффер", tasks: [] },
               ],
@@ -84,15 +84,16 @@ export const useKanbanStore = defineStore("kanban", {
               // Очищаем существующие столбцы и задачи
               board.columns.forEach(column => column.tasks = []);
               response.data.cards.forEach((cardData: any) => {
-                const card = cardData.card;
+                const card = cardData.data.card;
                 const task: any = {
                   id: card.id,
                   name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
-                  file: cardData.files[0]?.file_path || null,
-                  columnStatus: card.status
+                  file: cardData.data.files[0]?.file_path || null,
+                  columnStatus: card.status,
+                  dateOfBirthCandidate: card.date_of_birth_candidate
                 };
                 const column = board.columns.find((column) => column.name === card.status);
                 if (column) {
@@ -133,6 +134,7 @@ export const useKanbanStore = defineStore("kanban", {
           salary: parseInt(taskInfos.salaryCandidate),
           board_id: boardId,
           status: this.getBoardColumns(boardId)?.find(column => column.id === columnId)?.name,
+          date_of_birth_candidate: taskInfos.dateOfBirthCandidate,
         };
 
 
@@ -207,7 +209,7 @@ export const useKanbanStore = defineStore("kanban", {
             { id: uuidv4(), name: "Стакан резюме", tasks: [] },
             { id: uuidv4(), name: "Теплый контакт", tasks: [] },
             { id: uuidv4(), name: "Скрининг", tasks: [] },
-            { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
+            { id: uuidv4(), name: "Интервью", tasks: [] },
             { id: uuidv4(), name: "Проверка СБ", tasks: [] },
             { id: uuidv4(), name: "Оффер", tasks: [] },
           ],
