@@ -52,7 +52,7 @@ const updateBoardFormState = (newState: boolean) => {
         </NuxtLink>
       </div>
       <div
-        class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl"
+        class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl flex-auto"
         @click="() => (boardFormState = true)"
       >
         <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
