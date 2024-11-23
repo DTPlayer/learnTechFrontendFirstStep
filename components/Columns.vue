@@ -21,6 +21,7 @@
           v-for="task in getColumnTasks(boardId, column.id)"
           :key="task.id"
           :task-name="task.name"
+          :task-name-h-r="task.nameHR"
           draggable="true"
           @click="openEditForm(task, column.id)"
           @dragstart="startDrag($event, task, column.id)"
