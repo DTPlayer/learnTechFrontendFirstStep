@@ -15,6 +15,8 @@ const props = defineProps<{
   taskName: string;
   taskNameHR: string;
   taskPostCandidate: string;
-  taskDate: Date;
+  taskDate: string;
 }>();
+
+
 </script>

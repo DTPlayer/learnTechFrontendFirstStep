@@ -46,18 +46,34 @@ export const useKanbanStore = defineStore("kanban", {
           },
         })
           .then((response) => {
-            // Очищаем существующие доски и столбцы
-            this.boards = response.data.boards.map((board: Board) => ({
-              ...board,
-              columns: [
-                { id: uuidv4(), name: "Стакан резюме", tasks: [] },
-                { id: uuidv4(), name: "Теплый контакт", tasks: [] },
-                { id: uuidv4(), name: "Скрининг", tasks: [] },
-                { id: uuidv4(), name: "Интервью", tasks: [] },
-                { id: uuidv4(), name: "Проверка СБ", tasks: [] },
-                { id: uuidv4(), name: "Оффер", tasks: [] },
-              ],
-            }));
+            if (this.boards === undefined) {
+              this.boards = response.data.boards.map((board: Board) => ({
+                ...board,
+                columns: [
+                  { id: uuidv4(), name: "Стакан резюме", tasks: [] },
+                  { id: uuidv4(), name: "Теплый контакт", tasks: [] },
+                  { id: uuidv4(), name: "Скрининг", tasks: [] },
+                  { id: uuidv4(), name: "Интервью", tasks: [] },
+                  { id: uuidv4(), name: "Проверка СБ", tasks: [] },
+                  { id: uuidv4(), name: "Оффер", tasks: [] },
+                ],
+              }));
+            } else {
+              this.boards = response.data.boards.map((board: Board) => {
+                const existingBoard = this.boards?.find((b) => b.id === board.id);
+                return {
+                  ...board,
+                  columns: existingBoard ? existingBoard.columns : [
+                    { id: uuidv4(), name: "Стакан резюме", tasks: [] },
+                    { id: uuidv4(), name: "Теплый контакт", tasks: [] },
+                    { id: uuidv4(), name: "Скрининг", tasks: [] },
+                    { id: uuidv4(), name: "Интервью", tasks: [] },
+                    { id: uuidv4(), name: "Проверка СБ", tasks: [] },
+                    { id: uuidv4(), name: "Оффер", tasks: [] },
+                  ],
+                };
+              });
+            }
             this.isLoading = true;
           })
           .catch((error) => {
@@ -91,7 +107,7 @@ export const useKanbanStore = defineStore("kanban", {
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
-                  createdAt: new Date(Date.parse(card.created_at)),
+                  createdAt: new Date(Date.parse(card.created_at)).toLocaleString(),
                   file: cardData.data.files[0]?.file_path || null,
                   columnStatus: card.status,
                   dateOfBirthCandidate: card.date_of_birth_candidate
