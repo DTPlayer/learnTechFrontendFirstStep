@@ -5,12 +5,12 @@
     <div
       v-for="column in getBoardColumns(boardId)"
       :key="column.id"
-      class="w-80 overflow-y-auto select-none"
+      class="w-fit overflow-y-auto select-none"
       @drop="onDrop($event, column.id)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <div class="w-full py-4 mb-5 pl-2 bg-mauve rounded-xl">
+      <div class="w-full py-4 mb-5 pl-2 bg-mauve rounded-xl ">
         <p class="text-marengo">
           {{ column.name.toUpperCase() }} ({{ countTasks(column.id) }})
         </p>
