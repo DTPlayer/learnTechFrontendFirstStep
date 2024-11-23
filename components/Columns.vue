@@ -1,16 +1,16 @@
 <template>
   <div
-    class="grid grid-flow-col gap-10 p-5 overflow-x-auto h-[calc(100vh-100px)]"
+    class="grid grid-cols-6 gap-10 p-5 overflow-x-auto h-[calc(100vh-100px)]"
   >
     <div
       v-for="column in getBoardColumns(boardId)"
       :key="column.id"
-      class="w-fit overflow-y-auto select-none"
+      class="overflow-y-auto select-none"
       @drop="onDrop($event, column.id)"
       @dragenter.prevent
       @dragover.prevent
     >
-      <div class="w-full py-4 mb-5 pl-2 bg-mauve rounded-xl ">
+      <div class="w-full py-4 mb-5 pl-2 bg-mauve rounded-xl">
         <p class="text-marengo">
           {{ column.name.toUpperCase() }} ({{ countTasks(column.id) }})
         </p>
@@ -55,7 +55,7 @@ const openEditForm = (task: any, columnId: string): void => {
 const startDrag = (
   event: DragEvent,
   item: any,
-  fromColumnId: string
+  fromColumnId: string,
 ): void => {
   event.dataTransfer!.dropEffect = "move";
   event.dataTransfer!.effectAllowed = "move";

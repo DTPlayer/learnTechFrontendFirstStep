@@ -116,13 +116,6 @@ export const useKanbanStore = defineStore("kanban", {
       isEditing = false
     ): void {
       this.isLoading = true;
-      const board = this.boards?.find((board) => board.id === boardId);
-      if (board) {
-        const column = board.columns.find((column) => column.id === columnId);
-        if (column) {
-          column.tasks = [];
-        }
-      }
 
       const token = localStorage.getItem("token");
       if (token) {
@@ -298,7 +291,9 @@ export const useKanbanStore = defineStore("kanban", {
       if (board) {
         const column = board.columns.find((column) => column.id === columnId);
         if (column) {
+          console.log(column.tasks)
           column.tasks = column.tasks.filter((task) => task.id !== editedTask);
+          console.log(column.tasks)
         }
       }
     },
@@ -314,7 +309,6 @@ export const useKanbanStore = defineStore("kanban", {
         const column = board.columns.find((column) => column.id === columnId);
         if (column) {
           if (newColumnId !== columnId) {
-            this.removeTaskFromColumn(boardId, newColumnId, editedTask);
             this.addTaskToColumn(boardId, newColumnId, editedTask, true);
           } else {
             column.tasks = column.tasks.map((task: Task) =>

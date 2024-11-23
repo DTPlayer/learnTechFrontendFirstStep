@@ -2,7 +2,7 @@
   <div
     class="w-full p-5 rounded-xl bg-charcoal shadow-sm cursor-pointer hover:text-savoy transition-colors"
   >
-    <span class="text-sm font-medium select-none break-all w-full h-full">{{
+    <span class="text-sm font-medium select-none w-full h-full">{{
       props.taskName
     }}</span>
   </div>
