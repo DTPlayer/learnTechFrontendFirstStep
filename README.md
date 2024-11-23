@@ -1,23 +1,17 @@
 # Kanban
 
-## Tags
-
-![Development](https://img.shields.io/badge/Status-Development-green)
-![Languages](https://img.shields.io/github/languages/count/leonardonicola/kanban?color=blueviolet)
-![License](https://img.shields.io/github/license/leonardonicola/kanban?color=blueviolet")
-
 ## Features
 
 - [x] Drag and Drop
-  - [x] Drag and drop tasks between columns (status)
+  - [x] Drag and drop заданий вместе с изменением статуса
 - [x] CRUD
-  - [x] Create and edit tasks
-  - [x] Create, edit, remove columns (status)
-  - [x] Create, edit, remove boards [x
-- [x] Mobile responsive
+  - [x] Создание, редактирование и удаление колонок внутри store
+  - [x] Создание, редактирование и удаление колонок через API
+  - [x] Создание и удаление досок внутри store
+  - [x] Создание и удаление досок внутри API
 - [x] localStorage
 
-## Technologies
+## Технологии
 
 - [Nuxt](https://nuxt.com/)
 - [Typescript](https://www.typescriptlang.org/)
@@ -26,9 +20,9 @@
 - [uuid](https://github.com/uuidjs/uuid)
 - [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
 
-## Installation
+## Установка
 
-Install the project on your machine
+Установка проекта на вашей машине
 
 ```bash
 ## yarn
@@ -38,7 +32,7 @@ yarn install
 npm install
 ```
 
-Start the project in the development environment
+Запуск проекта в DEV моде
 
 ```bash
 # yarn
@@ -47,3 +41,5 @@ $ yarn dev
 # npm
 $ npm run dev
 ```
+
+Если вы хотите запустить свою API, то используйте [данный](https://github.com/DTPlayer/learnTechBackendFirstStep) репозиторий, а так же замените Endpoint URL в components/axiosInstance.js
