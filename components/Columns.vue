@@ -1,11 +1,11 @@
 <template>
   <div
-    class="grid grid-flow-col gap-10 p-5 overflow-x-auto h-[calc(100vh-100px)]"
+    class="grid grid-cols-6 gap-10 p-5 overflow-x-auto h-[calc(100vh-100px)]"
   >
     <div
       v-for="column in getBoardColumns(boardId)"
       :key="column.id"
-      class="w-80 overflow-y-auto select-none"
+      class="overflow-y-auto select-none"
       @drop="onDrop($event, column.id)"
       @dragenter.prevent
       @dragover.prevent
@@ -21,6 +21,9 @@
           v-for="task in getColumnTasks(boardId, column.id)"
           :key="task.id"
           :task-name="task.name"
+          :task-name-h-r="task.nameHR"
+          :task-post-candidate="task.postCandidate"
+          :task-date="task.createdAt"
           draggable="true"
           @click="openEditForm(task, column.id)"
           @dragstart="startDrag($event, task, column.id)"
@@ -55,7 +58,7 @@ const openEditForm = (task: any, columnId: string): void => {
 const startDrag = (
   event: DragEvent,
   item: any,
-  fromColumnId: string
+  fromColumnId: string,
 ): void => {
   event.dataTransfer!.dropEffect = "move";
   event.dataTransfer!.effectAllowed = "move";

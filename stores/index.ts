@@ -46,18 +46,34 @@ export const useKanbanStore = defineStore("kanban", {
           },
         })
           .then((response) => {
-            // Очищаем существующие доски и столбцы
-            this.boards = response.data.boards.map((board: Board) => ({
-              ...board,
-              columns: [
-                { id: uuidv4(), name: "Стакан резюме", tasks: [] },
-                { id: uuidv4(), name: "Теплый контакт", tasks: [] },
-                { id: uuidv4(), name: "Скрининг", tasks: [] },
-                { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
-                { id: uuidv4(), name: "Проверка СБ", tasks: [] },
-                { id: uuidv4(), name: "Оффер", tasks: [] },
-              ],
-            }));
+            if (this.boards === undefined) {
+              this.boards = response.data.boards.map((board: Board) => ({
+                ...board,
+                columns: [
+                  { id: uuidv4(), name: "Стакан резюме", tasks: [] },
+                  { id: uuidv4(), name: "Теплый контакт", tasks: [] },
+                  { id: uuidv4(), name: "Скрининг", tasks: [] },
+                  { id: uuidv4(), name: "Интервью", tasks: [] },
+                  { id: uuidv4(), name: "Проверка СБ", tasks: [] },
+                  { id: uuidv4(), name: "Оффер", tasks: [] },
+                ],
+              }));
+            } else {
+              this.boards = response.data.boards.map((board: Board) => {
+                const existingBoard = this.boards?.find((b) => b.id === board.id);
+                return {
+                  ...board,
+                  columns: existingBoard ? existingBoard.columns : [
+                    { id: uuidv4(), name: "Стакан резюме", tasks: [] },
+                    { id: uuidv4(), name: "Теплый контакт", tasks: [] },
+                    { id: uuidv4(), name: "Скрининг", tasks: [] },
+                    { id: uuidv4(), name: "Интервью", tasks: [] },
+                    { id: uuidv4(), name: "Проверка СБ", tasks: [] },
+                    { id: uuidv4(), name: "Оффер", tasks: [] },
+                  ],
+                };
+              });
+            }
             this.isLoading = true;
           })
           .catch((error) => {
@@ -84,15 +100,17 @@ export const useKanbanStore = defineStore("kanban", {
               // Очищаем существующие столбцы и задачи
               board.columns.forEach(column => column.tasks = []);
               response.data.cards.forEach((cardData: any) => {
-                const card = cardData.card;
+                const card = cardData.data.card;
                 const task: any = {
                   id: card.id,
                   name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
-                  file: cardData.files[0]?.file_path || null,
-                  columnStatus: card.status
+                  createdAt: new Date(Date.parse(card.created_at)).toLocaleString(),
+                  file: cardData.data.files[0]?.file_path || null,
+                  columnStatus: card.status,
+                  dateOfBirthCandidate: card.date_of_birth_candidate
                 };
                 const column = board.columns.find((column) => column.name === card.status);
                 if (column) {
@@ -115,13 +133,6 @@ export const useKanbanStore = defineStore("kanban", {
       isEditing = false
     ): void {
       this.isLoading = true;
-      const board = this.boards?.find((board) => board.id === boardId);
-      if (board) {
-        const column = board.columns.find((column) => column.id === columnId);
-        if (column) {
-          column.tasks = [];
-        }
-      }
 
       const token = localStorage.getItem("token");
       if (token) {
@@ -133,6 +144,7 @@ export const useKanbanStore = defineStore("kanban", {
           salary: parseInt(taskInfos.salaryCandidate),
           board_id: boardId,
           status: this.getBoardColumns(boardId)?.find(column => column.id === columnId)?.name,
+          date_of_birth_candidate: taskInfos.dateOfBirthCandidate,
         };
 
 
@@ -207,7 +219,7 @@ export const useKanbanStore = defineStore("kanban", {
             { id: uuidv4(), name: "Стакан резюме", tasks: [] },
             { id: uuidv4(), name: "Теплый контакт", tasks: [] },
             { id: uuidv4(), name: "Скрининг", tasks: [] },
-            { id: uuidv4(), name: "Интервью с заказчиком", tasks: [] },
+            { id: uuidv4(), name: "Интервью", tasks: [] },
             { id: uuidv4(), name: "Проверка СБ", tasks: [] },
             { id: uuidv4(), name: "Оффер", tasks: [] },
           ],
@@ -296,7 +308,9 @@ export const useKanbanStore = defineStore("kanban", {
       if (board) {
         const column = board.columns.find((column) => column.id === columnId);
         if (column) {
+          console.log(column.tasks)
           column.tasks = column.tasks.filter((task) => task.id !== editedTask);
+          console.log(column.tasks)
         }
       }
     },
@@ -312,7 +326,6 @@ export const useKanbanStore = defineStore("kanban", {
         const column = board.columns.find((column) => column.id === columnId);
         if (column) {
           if (newColumnId !== columnId) {
-            this.removeTaskFromColumn(boardId, newColumnId, editedTask);
             this.addTaskToColumn(boardId, newColumnId, editedTask, true);
           } else {
             column.tasks = column.tasks.map((task: Task) =>

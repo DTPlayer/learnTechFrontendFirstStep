@@ -10,7 +10,7 @@
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
-        <h2>Изменить Доску</h2>
+        <h2>Удалить Доску</h2>
         <div class="flex flex-col space-y-2 justify-between h-f md:w-96">
           <div class="flex flex-col gap-5">
             <label for="task_name">Название Доски</label>
@@ -20,15 +20,11 @@
               type="text"
               name="task_name"
               placeholder="Введите Название Доски"
+              disabled
             />
           </div>
         </div>
         <div class="flex flex-col gap-3 mt-8">
-          <ButtonBase
-            label="Сохранить Изменения"
-            @action="saveChanges"
-            class="bg-green-600"
-          />
           <ButtonBase
             label="Удалить Доску"
             @action="removeBoard"
@@ -66,18 +62,6 @@ const boardColumns = ref<IColumn[] | null>(null);
 const validateColumnsName = (): boolean => {
   const columnsNames = boardColumns.value!.map((column) => column.name);
   return useValidator(...columnsNames);
-};
-
-const saveChanges = () => {
-  if (useValidator(boardName.value) && validateColumnsName()) {
-    editBoard(boardId, boardName.value) // Передаем boardId и новое название доски
-      .then(() => {
-        boardFormState.value = false; // Закрываем модальное окно после успешного изменения
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 };
 
 const removeColumnFromBoard = (columnId: string) => {
