@@ -332,11 +332,29 @@ export const useKanbanStore = defineStore("kanban", {
           },
           data: { name: newBoardName }, // Передаем новое название доски в теле запроса
         })
-          .then(() => {
-            // Обновляем локальное состояние
+          .then((response: any) => {
             const board = this.boards?.find((board) => board.id === boardId);
             if (board) {
-              board.name = newBoardName;
+              // Очищаем существующие столбцы и задачи
+              board.columns.forEach(column => column.tasks = []);
+              console.log(board)
+              response.data.cards.forEach((cardData: any) => {
+                const card = cardData.card;
+                const task: any = {
+                  id: card.id,
+                  name: `${card.first_name_candidate} ${card.last_name_candidate} ${card.middle_name_candidate}`,
+                  nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
+                  postCandidate: card.job_title,
+                  salaryCandidate: card.salary.toString(),
+                  file: cardData.files[0]?.file_path || null,
+                };
+                const column = board.columns.find((column) => column.name === card.status);
+                if (column) {
+                  column.tasks.push(task);
+                  console.log(column.tasks)
+                }
+                this.isLoading = false;
+              });
             }
           })
           .catch((error) => {

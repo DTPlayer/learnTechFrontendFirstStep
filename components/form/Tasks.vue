@@ -1,14 +1,14 @@
 <template>
   <transition name="fade">
     <div v-if="isFormOpenState" class="popup-modal">
-      <div class="w-96 lg:w-1/3 flex flex-col p-8 bg-charcoal rounded-xl gap-3 relative m-10">
+      <div class="w-96 lg:w-1/3 flex flex-col p-8 bg-charcoal rounded-xl gap-2 relative m-10">
         <button class="absolute right-0 translate-x-4 -translate-y-5 top-0 rounded-full bg-mauve p-3" @click="toggleFormModal(false)">
           <XMarkIcon class="w-5 h-5" />
         </button>
 
         <h2>{{ !!taskToEditState ? "Изменить" : "Добавить" }} Карточку</h2>
 
-        <div class="w-full h-full space-y-2 flex flex-col">
+        <div class="w-full h-full space-y-1 flex flex-col">
           <div class="flex flex-col space-y-2">
             <label for="task_FIOCandidate">ФИО кандидата</label>
             <input v-model.trim="taskFIOCandidate" type="text" name="task_FIOCandidate" placeholder="Введите ФИО кандидата" />
@@ -45,6 +45,18 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, doc, excel, pdf.</p>
           </div>
 
+          <div class="flex flex-col space-y-2">
+            <label for="task_taskFileCandidate">Загрузить файл</label>
+            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidate" type="file">
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, doc, excel, pdf.</p>
+          </div>
+
+          <div class="flex flex-col space-y-2">
+            <label for="task_taskFileCandidate">Загрузить файл</label>
+            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidate" type="file">
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">docx, doc, excel, pdf.</p>
+          </div>
+
           <div class="flex flex-row justify-between">
             <div class="space-y-2">
               <label for="task_SalaryCandidate">Дата создания резюме</label>
@@ -65,8 +77,8 @@
             </div>
           </div>
         </div>
+        <UCheckbox v-if="taskToEditState" :label="removeLabel" @click="() => { taskToDelete(taskIdToDelete) }" />
         <BaseButton :label="buttonLabel" @action="taskToEditState ? editTaskInfos() : createNewTask()" class="bg-savoy" />
-        <BaseButton v-if="taskToEditState" :label="removeLabel" @click="() => { taskToDelete(taskIdToDelete) }" class="bg-savoy" />
       </div>
     </div>
   </transition>
@@ -273,7 +285,7 @@ const buttonLabel = computed(() => {
   return taskToEditState.value ? "Сохранить Изменения" : "Добавить Карточку";
 });
 const removeLabel = computed(() => {
-  return taskToEditState.value ? "Удалить карточку" : "Удалить карточку";
+  return taskToEditState.value ? "Выведен на проект" : "Выведен на проект";
 });
 
 watch(isFormOpenState, () => {
