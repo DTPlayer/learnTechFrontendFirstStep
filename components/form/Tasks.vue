@@ -42,17 +42,17 @@
 
           <div class="flex flex-col space-y-1">
             <label for="task_taskFileCandidate">Загрузить «Скрининг»</label>
-            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidate" type="file">
+            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidate" type="file" :disabled="!isScreening">
           </div>
 
           <div class="flex flex-col space-y-1">
             <label for="task_taskFileCandidateInterview">Загрузить «Интервью с заказчиком»</label>
-            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidateInterview" type="file">
+            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidateInterview" type="file" :disabled="!isInterview">
           </div>
 
           <div class="flex flex-col space-y-1">
             <label for="task_taskFileCandidateOffer">Загрузить «Оффер»</label>
-            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidateOffer" type="file">
+            <input aria-describedby="file_input_help" @change="handleFileChange" name="task_taskFileCandidateOffer" type="file" :disabled="!isCheck">
           </div>
 
           <div class="flex flex-row justify-between">
@@ -119,6 +119,25 @@ const taskFileCandidateInterview = ref<File | null>(null);
 const taskFileCandidateOffer = ref<File | null>(null);
 const taskIdToDelete = ref<string | null>(null);
 
+const isScreening = computed(() => {
+  const column = store.getBoardColumns(boardId)?.find(column => column.id === taskColumnId.value);
+  return column && column.name === "Скрининг";
+});
+
+const isInterview = computed(() => {
+  const column = store.getBoardColumns(boardId)?.find(column => column.id === taskColumnId.value);
+  return column && column.name === "Интервью";
+});
+
+const isCheck = computed(() => {
+  const column = store.getBoardColumns(boardId)?.find(column => column.id === taskColumnId.value);
+  return column && column.name === "Проверка СБ";
+});
+
+const isOffer = computed(() => {
+  const column = store.getBoardColumns(boardId)?.find(column => column.id === taskColumnId.value);
+  return column && column.name === "Проверка СБ";
+});
 
 function taskToDelete(taskId: string | null) {
   if (taskId) {
