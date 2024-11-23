@@ -9,19 +9,20 @@
         <h2>{{ !!taskToEditState ? "Изменить" : "Добавить" }} Карточку</h2>
 
         <div class="w-full h-full space-y-1 flex flex-col">
-          <div class="flex flex-col space-y-1">
-            <label for="task_FIOCandidate">ФИО кандидата</label>
-            <input v-model.trim="taskFIOCandidate" type="text" name="task_FIOCandidate" placeholder="Введите ФИО кандидата" />
-          </div>
-
-          <div class="flex flex-col space-y-1">
-            <label for="task_DOBCandidate">Дата рождения кандидата</label>
-            <UPopover :popper="{ placement: 'bottom-start' }">
-              <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(dateOfBirth, 'd MMM, yyy')" />
-              <template #panel="{ close }">
-                <DatePicker v-model="dateOfBirth" is-required @close="close" />
-              </template>
-            </UPopover>
+          <div class="flex flex-row justify-between">
+            <div class="flex flex-col space-y-1 w-2/4">
+              <label for="task_FIOCandidate">ФИО кандидата</label>
+              <input v-model.trim="taskFIOCandidate" type="text" name="task_FIOCandidate" placeholder="Введите ФИО кандидата"/>
+            </div>
+            <div class="flex flex-col space-y-1">
+              <label for="task_DOBCandidate">Дата рождения кандидата</label>
+              <UPopover :popper="{ placement: 'bottom-start' }">
+                <UButton icon="i-heroicons-calendar-days-20-solid" :label="format(dateOfBirth, 'd MMM, yyy')" />
+                <template #panel="{ close }" >
+                  <DatePicker v-model="dateOfBirth" is-required @close="close" />
+                </template>
+              </UPopover>
+            </div>
           </div>
 
           <div class="flex flex-col space-y-1">
