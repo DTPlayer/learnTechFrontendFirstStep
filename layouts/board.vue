@@ -33,7 +33,7 @@ const logout = () => {
 <template>
   <main class="flex h-screen w-screen">
     <aside
-      class="hidden md:block h-full w-96 bg-charcoal border-r border-white border-opacity-10 text-marengo overflow-y-auto"
+      class="hidden md:flex flex-col h-full w-96 bg-charcoal border-r border-white border-opacity-10 text-marengo overflow-y-auto"
     >
       <div class="w-full p-5">
         <NuxtLink to="/" exact-active-class="text-savoy ">
@@ -57,12 +57,12 @@ const logout = () => {
         </NuxtLink>
       </div>
       <div
-        class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl flex-auto"
+        class="px-5 py-3 mr-5 flex gap-2 items-center text-savoy cursor-pointer hover:bg-gray-500/20 transition-colors rounded-r-3xl flex-shrink-0"
         @click="() => (boardFormState = true)"
       >
         <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
       </div>
-      <div class="flex flex-col gap-3 m-3">
+      <div class="flex flex-col gap-3 m-3 mt-auto">
         <ButtonBase
           label="Выход"
           class="bg-red-600"

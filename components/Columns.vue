@@ -60,6 +60,25 @@ const startDrag = (
   item: any,
   fromColumnId: string,
 ): void => {
+  const column = getBoardColumns(boardId)?.find(column => column.id === fromColumnId);
+  if (column) {
+    if (column.name === "Скрининг" && !item.file) {
+      alert("Нельзя перетащить карточку без загруженного файла «Скрининг»");
+      event.preventDefault();
+      return;
+    }
+    if (column.name === "Интервью" && !item.fileInterview) {
+      alert("Нельзя перетащить карточку без загруженного файла «Интервью с заказчиком»");
+      event.preventDefault();
+      return;
+    }
+    if (column.name === "Проверка СБ" && !item.fileOffer) {
+      alert("Нельзя перетащить карточку без загруженного файла «Оффер»");
+      event.preventDefault();
+      return;
+    }
+  }
+
   event.dataTransfer!.dropEffect = "move";
   event.dataTransfer!.effectAllowed = "move";
   event.dataTransfer!.setData("itemID", item.id);
