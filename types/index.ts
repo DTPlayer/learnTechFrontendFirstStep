@@ -6,6 +6,8 @@ interface Base {
 export interface Task extends Base {
   description: string;
   nameHR: string;
+  postCandidate: string;
+  createdAt: Date;
 }
 
 export interface IColumn extends Base {

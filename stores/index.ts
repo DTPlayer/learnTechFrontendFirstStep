@@ -91,6 +91,7 @@ export const useKanbanStore = defineStore("kanban", {
                   nameHR: `${localStorage.getItem("userFirstName")} ${localStorage.getItem("userLastName")} ${localStorage.getItem("userMiddleName")}`, // Добавьте ФИО HR, если оно есть в ответе
                   postCandidate: card.job_title,
                   salaryCandidate: card.salary.toString(),
+                  createdAt: new Date(Date.parse(card.created_at)),
                   file: cardData.data.files[0]?.file_path || null,
                   columnStatus: card.status,
                   dateOfBirthCandidate: card.date_of_birth_candidate

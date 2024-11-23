@@ -17,7 +17,7 @@
           v-for="board in boards"
           :key="board.id"
           :to="`/${board.id}`"
-          class="flex gap-2 px-5 py-3 mr-5 items-center hover:bg-darkGreen transition-colors rounded-r-3xl font-bold"
+          class="flex gap-2 px-5 py-3 mr-5 mb-3 items-center hover:bg-darkGreen transition-colors rounded-r-3xl font-bold"
           exact-active-class="bg-savoy"
         >
           <ViewColumnsIcon class="w-5 h-5" />
@@ -29,6 +29,12 @@
         @click="() => (boardFormState = true)"
       >
         <ViewColumnsIcon class="w-5 h-5" />+ Создать Новую Доску
+      </div>
+      <div class="flex flex-col gap-3 m-3">
+        <ButtonBase
+          label="Выход"
+          class="bg-red-600"
+        />
       </div>
     </aside>
     <NuxtPage />
@@ -42,6 +48,7 @@ import { storeToRefs } from "pinia";
 import MyCustomIcon from '~/components/MyCustomIcon.vue';
 import AddBoard from '~/components/form/AddBoard.vue';
 import { ref, onMounted, computed } from "vue";
+import ButtonBase from "~/components/base/Button.vue";
 
 const boardFormState = ref(false);
 

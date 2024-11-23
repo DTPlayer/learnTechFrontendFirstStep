@@ -22,6 +22,8 @@
           :key="task.id"
           :task-name="task.name"
           :task-name-h-r="task.nameHR"
+          :task-post="task.postCandidate"
+          :task-date="task.createdAt"
           draggable="true"
           @click="openEditForm(task, column.id)"
           @dragstart="startDrag($event, task, column.id)"
