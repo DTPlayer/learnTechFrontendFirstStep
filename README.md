@@ -1,6 +1,6 @@
 # Kanban
 
-## Features
+## Фугкционал
 
 - [x] Drag and Drop
   - [x] Drag and drop заданий вместе с изменением статуса
@@ -18,7 +18,7 @@
 - [Tailwind CSS](https://tailwindcss.com)
 - [Pinia](https://pinia.vuejs.org/)
 - [uuid](https://github.com/uuidjs/uuid)
-- [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
+- [NPM](https://www.npmjs.com/) или [Yarn](https://yarnpkg.com/)
 
 ## Установка
 
