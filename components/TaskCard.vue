@@ -6,7 +6,7 @@
       <span>ФИО: {{ props.taskName }}</span>
       <span>HR: {{ props.taskNameHR }}</span>
       <span>Должность: {{ props.taskPostCandidate }}</span>
-      <span>Дата Создания: {{ props.taskDate }}</span>
+      <span>Дата Создания: {{ createdAt }}</span>
     </div>
   </div>
 </template>
@@ -18,5 +18,14 @@ const props = defineProps<{
   taskDate: string;
 }>();
 
+const createdAt = ref('');
+
+onMounted(() => {
+  if (props.taskDate.indexOf('T') !== -1) {
+    createdAt.value = new Date(props.taskDate).toLocaleString();
+  } else {
+    createdAt.value = props.taskDate
+  }
+})
 
 </script>

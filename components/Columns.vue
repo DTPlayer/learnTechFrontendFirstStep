@@ -18,7 +18,7 @@
 
       <TransitionGroup tag="div" name="tasks" class="flex flex-col gap-5">
         <TaskCard
-          v-for="task in getColumnTasks(boardId, column.id)"
+          v-for="task in taskList(column)"
           :key="task.id"
           :task-name="task.name"
           :task-name-h-r="task.nameHR"
@@ -30,7 +30,6 @@
         />
       </TransitionGroup>
     </div>
-    <FormColumn />
   </div>
 </template>
 
@@ -54,6 +53,10 @@ const openEditForm = (task: any, columnId: string): void => {
   isFormOpenState.value = true;
   taskToEditState.value = { ...task, columnParentId: columnId };
 };
+
+const taskList = (column: any) => {
+  return getColumnTasks(boardId, column.id);
+}
 
 const startDrag = (
   event: DragEvent,

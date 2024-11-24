@@ -151,6 +151,7 @@ function taskToDelete(taskId: string | null) {
         file: taskFileCandidate.value,
         fileInterview: taskFileCandidateInterview.value,
         fileOffer: taskFileCandidateOffer.value,
+        createdAt: date.value
       },).then((result) => {
       if (result) {
         console.log("Task deleted successfully");
@@ -217,6 +218,7 @@ const createNewTask = (): void => {
     file: taskFileCandidate.value,
     fileInterview: taskFileCandidateInterview.value,
     fileOffer: taskFileCandidateOffer.value,
+    createdAt: date.value
   };
 
   store.addTaskToColumn(boardId, taskColumnId.value, newTask)
@@ -266,6 +268,7 @@ const editTaskInfos = (): void => {
         postCandidate: taskPostCandidate.value,
         salaryCandidate: taskSalaryCandidate.value,
         file: taskFileCandidate.value,
+        createdAt: date.value
       },
       taskFileCandidate.value
     )
@@ -281,6 +284,7 @@ const editTaskInfos = (): void => {
     file: taskFileCandidate.value,
     fileInterview: taskFileCandidateInterview.value,
     fileOffer: taskFileCandidateOffer.value,
+    createdAt: date.value
   };
 
   store.editTaskData(
