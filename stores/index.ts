@@ -134,6 +134,15 @@ export const useKanbanStore = defineStore("kanban", {
     ): void {
       this.isLoading = true;
 
+      const newTask = { id: taskInfos.id, ...taskInfos };
+      const board = this.boards?.find((board) => board.id === boardId);
+      if (board) {
+        const column = board.columns.find((column) => column.id === columnId);
+        if (column) {
+          column.tasks.push(newTask);
+        }
+      }
+
       const token = localStorage.getItem("token");
       if (token) {
         const taskData = {
@@ -147,7 +156,6 @@ export const useKanbanStore = defineStore("kanban", {
           date_of_birth_candidate: taskInfos.dateOfBirthCandidate,
         };
 
-
         axiosInstance({
           method: "post",
           url: isEditing ? `/api/card/${taskInfos.id}/edit` : "/api/card/create",
@@ -157,15 +165,6 @@ export const useKanbanStore = defineStore("kanban", {
           data: taskData,
         })
           .then((response) => {
-            const newTask = { id: response.data.id, ...taskInfos }; // Используем ID, возвращенный сервером
-            const board = this.boards?.find((board) => board.id === boardId);
-            if (board) {
-              const column = board.columns.find((column) => column.id === columnId);
-              if (column) {
-                column.tasks.push(newTask);
-              }
-            }
-
             if (!isEditing && taskInfos.file) {
               taskInfos.id = response.data.cards[-1].id;
               this.uploadFiles(taskData.board_id, response.data.cards[-1].id, taskInfos, taskInfos.file)
@@ -175,7 +174,6 @@ export const useKanbanStore = defineStore("kanban", {
           })
           .catch((error) => {
             console.log(error);
-            console.log(taskData);
             this.isLoading = false;
           });
       }
